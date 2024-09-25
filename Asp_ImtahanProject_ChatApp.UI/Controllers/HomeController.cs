@@ -26,7 +26,15 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             return View();
         }
 
+        public ActionResult MyProfile()
+        {
+            return View();
+        }
 
+        public ActionResult Setting()
+        {
+            return View();
+        }
     }
 
 }
