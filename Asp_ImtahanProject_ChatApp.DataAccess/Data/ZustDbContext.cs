@@ -17,6 +17,7 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Data
 
 
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<FriendshipRequest> FriendshipRequests { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostTag> PostTags { get; set;}

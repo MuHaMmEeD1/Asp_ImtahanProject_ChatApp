@@ -1,4 +1,7 @@
-﻿<!doctype html>
+﻿@model LoginModel
+
+
+<!doctype html>
 <html lang="zxx">
 <head>
     <!-- Required meta tags -->
@@ -58,32 +61,32 @@
                     <div class="login-form">
                         <h2>Login</h2>
 
-                        <form>
+                        <form asp-action="Login" method="post">
                             <div class="form-group">
-                                <label>Username or email</label>
-                                <input type="text" class="form-control">
+                                <label asp-for=@Model.UsernameOrEmail></label>
+                                <input asp-for=@Model.UsernameOrEmail class="form-control" />
+                                <span asp-validation-for=@Model.UsernameOrEmail class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" class="form-control">
+                                <label asp-for=@Model.Password></label>
+                                <input asp-for=@Model.Password type="password" class="form-control" />
+                                <span asp-validation-for=@Model.Password class="text-danger"></span>
                             </div>
 
                             <div class="remember-me-wrap d-flex justify-content-between align-items-center">
                                 <p>
-                                    <input type="checkbox" id="test1">
-                                    <label for="test1">Remember me</label>
+                                    <input asp-for=@Model.RememberMe type="checkbox" id="rememberMe" />
+                                    <label for="rememberMe">Remember me</label>
                                 </p>
-
-                            
                             </div>
+
                             <button type="submit" class="default-btn">Login</button>
                             <div class="or-text"><span>Or</span></div>
                             <button type="submit" class="google-btn">Log In with Google</button>
 
-                            <a href="/Register/Index" style="text-align: center;" class="default-btn">
-                              
-                                    Go To Register
+                            <a href="/Register/Index" class="default-btn" style="text-align: center;">
+                                Go To Register
                             </a>
                         </form>
                     </div>

@@ -4,6 +4,7 @@ using Asp_ImtahanProject_ChatApp.DataAccess.Abstract;
 using Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework;
 using Asp_ImtahanProject_ChatApp.DataAccess.Data;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+using Asp_ImtahanProject_ChatApp.UI.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
+builder.Services.AddSignalR();
+
+
 
 // Dal Start
 
 builder.Services.AddScoped<ICommentDal, EFCommentDal>();
+builder.Services.AddScoped<IFriendshipRequestDal, EFFriendshipRequestDal>();
 builder.Services.AddScoped<IMessageDal, EFMessageDal>();
 builder.Services.AddScoped<IPostDal, EFPostDal>();
 builder.Services.AddScoped<IPostTagDal, EFPostTagDal>();
@@ -30,6 +35,7 @@ builder.Services.AddScoped<IUserFriendDal, EFUserFriendDal>();
 // Service Start
 
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IFriendshipRequestService, FriendshipRequestService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostTagService, PostTagService>();
@@ -77,7 +83,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.MapHub<FriendHub>("/friendHub");
+
 
 app.MapControllerRoute(
     name: "default",

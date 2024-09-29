@@ -4,6 +4,7 @@ using Asp_ImtahanProject_ChatApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    partial class ZustDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926111858_mig2")]
+    partial class mig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,32 +55,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.FriendshipRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("OtherUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool?>("Response")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OtherUserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FriendshipRequests");
                 });
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Message", b =>
@@ -515,21 +492,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.FriendshipRequest", b =>
-                {
-                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "OtherUser")
-                        .WithMany()
-                        .HasForeignKey("OtherUserId");
-
-                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("OtherUser");
 
                     b.Navigation("User");
                 });

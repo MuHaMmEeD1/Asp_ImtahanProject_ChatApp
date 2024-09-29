@@ -12,7 +12,6 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public string? Email { get; set; }
         public string? BackupEmail { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string? PhoneNo { get; set; }
@@ -28,6 +27,7 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public string? Country { get; set; }
         public string? ProfileImageUrl { get; set; }
         public string? BackgroundImageUrl { get; set; }
+        public bool IsOnline { get; set; }
  
 
         public virtual ICollection<Post>? Posts { get; set; }

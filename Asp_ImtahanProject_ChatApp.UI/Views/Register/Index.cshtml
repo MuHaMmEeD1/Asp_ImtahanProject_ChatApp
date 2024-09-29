@@ -1,4 +1,8 @@
-﻿<!doctype html>
+﻿
+@model RegisterModel
+
+
+<!doctype html>
 <html lang="zxx">
 <head>
     <!-- Required meta tags -->
@@ -62,40 +66,43 @@
                     <div class="register-form">
                         <h2>Register</h2>
 
-                        <form>
+                        <form asp-action="Index" method="post">
                             <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control">
+                                <label asp-for=@Model.Name></label>
+                                <input asp-for=@Model.Name class="form-control" placeholder="Enter your name" />
+                                <span asp-validation-for=@Model.Name class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="form-control">
+                                <label asp-for=@Model.Email></label>
+                                <input asp-for=@Model.Email class="form-control" placeholder="Enter your email" />
+                                <span asp-validation-for=@Model.Email class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" class="form-control">
+                                <label asp-for=@Model.Password></label>
+                                <input asp-for=@Model.Password class="form-control" placeholder="Enter your password" />
+                                <span asp-validation-for=@Model.Password class="text-danger"></span>
+                               
                             </div>
 
                             <div class="form-group">
-                                <label>Confirm Password</label>
-                                <input type="password" class="form-control">
+                                <label asp-for=@Model.ConfirmPassword></label>
+                                <input asp-for=@Model.ConfirmPassword class="form-control" placeholder="Confirm your password" />
+                                <span asp-validation-for=@Model.ConfirmPassword class="text-danger"></span>
                             </div>
 
-                            <div class="remember-me-wrap">
-                                <p>
-                                    <input type="checkbox" id="test1">
-                                    <label for="test1">I Accept The <a href="privacy.html">Privacy</a></label>
-                                </p>
+                            <div class="form-group">
+                                <label asp-for="Privacy">
+                                    <input type="checkbox" asp-for="Privacy" /> I Accept The Privacy Policy
+                                </label>
+                                <span asp-validation-for="Privacy" class="text-danger"></span>
                             </div>
+
                             <button type="submit" class="default-btn">Register</button>
                             <div class="or-text"><span>Or</span></div>
-                            <button type="submit" class="google-btn">Log In with Google</button>
-                            <a href="/Register/Login" style="text-align: center;" class="default-btn">
-
-                                Go To Login
-                            </a>
+                            <button type="button" class="google-btn"  onclick="window.location.href='/LoginWithGoogle'">Log In with Google</button>
+                            <a href="/Register/Login" class="default-btn" style="text-align: center;">Go To Login</a>
                         </form>
                     </div>
                 </div>
