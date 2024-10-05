@@ -10,5 +10,7 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Abstract
 {
     public interface ITagDal : IEntityRepository<Tag>
     {
+        Task<Tag> GetOrCreateTagAsync(string tagName);
+
     }
 }

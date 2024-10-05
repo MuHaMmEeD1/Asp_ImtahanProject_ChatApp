@@ -31,3 +31,4 @@ document.addEventListener("DOMContentLoaded", function () {
         menuItems[0].parentElement.classList.add("active");
     }
 });
+

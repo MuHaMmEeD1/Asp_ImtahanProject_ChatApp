@@ -10,5 +10,8 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Abstract
 {
     public interface IPostTagDal : IEntityRepository<PostTag>
     {
+
+        Task AddAsync(PostTag postTag);
+
     }
 }

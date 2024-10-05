@@ -2,6 +2,7 @@
     Layout = "~/Views/Shared/_LayoutAfterLogin.cshtml";
 }
 
+@model PostModel;
 
 <div class="content-page-box-area">
             <div class="row">
@@ -100,25 +101,49 @@
                         <div class="news-feed news-feed-form">
                             <h3 class="news-feed-title">Create New Post</h3>
 
-                            <form>
-                                <div class="form-group">
-                                    <textarea name="message" class="form-control" placeholder="Write something here..."></textarea>
-                                </div>
-                                <ul class="button-group d-flex justify-content-between align-items-center">
-                                    <li class="photo-btn">
-                                        <button type="submit"><i class="flaticon-gallery"></i> Photo</button>
-                                    </li>
-                                    <li class="video-btn">
-                                        <button type="submit"><i class="flaticon-video"></i> Video</button>
-                                    </li>
-                                    <li class="tag-btn">
-                                        <button type="submit"><i class="flaticon-tag"></i> Tag Friends</button>
-                                    </li>
-                                    <li class="post-btn">
-                                        <button type="submit">Post</button>
-                                    </li>
-                                </ul>
-                            </form>
+                    <form asp-controller="Home" asp-action="CreatePost" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label asp-for=@Model.Message></label>
+                            <textarea asp-for=@Model.Message class="form-control" placeholder="Write something here..." rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <p style="color: black; padding-top: 20px;">Photo Url</p>
+                            <label asp-for=@Model.Photo style="position: relative; bottom: 10px; padding-bottom: 10px;" >
+                               @(Model.Photo?.FileName ?? "Image Not Selected")
+                            </label>
+                            <input asp-for=@Model.Photo type="file" class="form-control-file" style="display: none;" onchange="updateLabel(this)">
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for=@Model.VideoUrl>Video URL</label>
+                            <input asp-for=@Model.VideoUrl type="url" class="form-control" placeholder="Enter video URL (YouTube, etc.)">
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for=@Model.Tags>Tag Friends</label>
+                            <input asp-for=@Model.Tags type="text" class="form-control" placeholder="Enter tags, separated by commas">
+                        </div>
+
+
+                      
+                        <ul class="button-group d-flex justify-content-between align-items-center">
+                            <li class="photo-btn">
+                                <button type="button" onclick="document.getElementById('Photo').click();"><i class="flaticon-gallery"></i> Photo</button>
+                            </li>
+                            <li class="video-btn">
+                                <button type="button" onclick="document.getElementById('VideoUrl').focus();"><i class="flaticon-video"></i> Video</button>
+                            </li>
+                            <li class="tag-btn">
+                                <button type="button" onclick="document.getElementById('Tags').focus();"><i class="flaticon-tag"></i> Tag Friends</button>
+                            </li>
+                            <li class="post-btn">
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </li>
+                        </ul>
+                    </form>
+
+
                         </div>
 
                         <div class="news-feed news-feed-stories">
@@ -653,11 +678,7 @@
 
                 <div class="col-lg-3 col-md-12">
                     <aside class="widget-area">
-                        <div class="widget widget-weather">
-                            <div class="weather-image">
-                        <a href="#"><img src="~/assets/images/weather/weather.jpg" alt="image"></a>
-                            </div>
-                        </div>
+                       
                        
                         <div class="widget widget-explore-events">
                             <h3 class="widget-title">Explore Events</h3>
@@ -674,4 +695,7 @@
                 </div>
             </div>
         </div>
-      
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/functions.js"></script>

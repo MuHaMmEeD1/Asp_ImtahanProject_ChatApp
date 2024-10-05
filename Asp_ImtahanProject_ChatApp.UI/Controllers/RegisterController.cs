@@ -11,7 +11,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
     public class RegisterController : Controller
     {
-
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
@@ -23,7 +22,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             _userService = userService;
         }
 
-        
         [HttpGet]
         public ActionResult Index()
         {
@@ -37,19 +35,18 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             {
                 if (!rm.Privacy)
                 {
-                    ModelState.AddModelError(nameof(rm.Privacy), "You must accept the privacy policy."); // buna deyme muhamməd
+                    ModelState.AddModelError(nameof(rm.Privacy), "You must accept the privacy policy.");
                 }
                 return View(rm);
             }
-
 
             var user = new User { UserName = rm.Name, Email = rm.Email };
             var result = await _userManager.CreateAsync(user, rm.Password);
 
             if (result.Succeeded)
             {
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Login", "Register");
-               
             }
 
             foreach (var error in result.Errors)
@@ -60,11 +57,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             return View(rm);
         }
 
-
         [HttpGet]
         public ActionResult Login()
         {
-            return View(new LoginModel()); 
+            return View(new LoginModel());
         }
 
         [HttpPost]
@@ -92,4 +88,3 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         }
     }
 }
-

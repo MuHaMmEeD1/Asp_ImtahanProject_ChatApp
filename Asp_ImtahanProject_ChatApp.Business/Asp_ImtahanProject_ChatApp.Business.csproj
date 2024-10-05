@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Asp_ImtahanProject_ChatApp.DataAccess\Asp_ImtahanProject_ChatApp.DataAccess.csproj" />
+    <ProjectReference Include="..\Asp_ImtahanProject_ChatApp.Entities\Asp_ImtahanProject_ChatApp.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

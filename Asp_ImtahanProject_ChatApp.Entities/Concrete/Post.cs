@@ -18,7 +18,7 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public string? UserId { get; set; } 
         public virtual User? User { get; set; }  
 
-        public virtual ICollection<PostTag>? Tags { get; set; }
+        public virtual ICollection<PostTag>? PostTags { get; set; }
 
         public virtual ICollection<Comment>? Comments { get; set; } 
     }

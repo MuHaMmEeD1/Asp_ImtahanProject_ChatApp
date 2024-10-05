@@ -14,6 +14,7 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework
     {
         public EFPostTagDal(ZustDbContext context) : base(context)
         {
+
         }
     }
 }

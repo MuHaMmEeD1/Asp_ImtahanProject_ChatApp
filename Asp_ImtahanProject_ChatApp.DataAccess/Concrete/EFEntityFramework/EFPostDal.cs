@@ -12,8 +12,13 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework
 {
     public class EFPostDal : EFEntityRepositoryBase<Post, ZustDbContext>, IPostDal
     {
+        private readonly ZustDbContext _context;
+
         public EFPostDal(ZustDbContext context) : base(context)
         {
+            _context = context;
         }
+
+       
     }
 }

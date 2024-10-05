@@ -20,6 +20,7 @@ namespace Asp_ImtahanProject_ChatApp.Core.Concrete.EntityFramework
         public EFEntityRepositoryBase(TContext context)
         {
             _context = context;
+
         }
 
 

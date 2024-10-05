@@ -1,24 +1,37 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Asp_ImtahanProject_ChatApp.Business.Abstract;
+using Asp_ImtahanProject_ChatApp.Business.Concrete;
+using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Hubs
 {
     public class FriendHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+
+        private readonly IUserService _userService;
+
+        public FriendHub(IUserService userService)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            _userService = userService;
         }
 
-        // Kullanıcıların bağlanması
         public override async Task OnConnectedAsync()
         {
-            await base.OnConnectedAsync();
+
+            string? userIdClaim = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            User user = await _userService.GetUserByIdAsync(userIdClaim!);
+
+
+
+            await Clients.Caller.SendAsync("OnConnectedMethod", user.UserName, user.ProfileImageUrl);
         }
 
-        // Kullanıcıların ayrılması
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);
         }
+
     }
 }

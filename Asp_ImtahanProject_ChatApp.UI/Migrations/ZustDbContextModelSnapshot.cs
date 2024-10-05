@@ -126,9 +126,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
@@ -139,8 +136,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TagId");
 
                     b.HasIndex("UserId");
 
@@ -259,6 +254,20 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "5ccb6f53-6000-4d43-a3cc-78d3268d815b",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "dac5e728-ab04-4243-94e6-56dd6ea4f870",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -551,10 +560,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Post", b =>
                 {
-                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.Tag", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("TagId");
-
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
@@ -565,13 +570,13 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.PostTag", b =>
                 {
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.Post", "Post")
-                        .WithMany("Tags")
+                        .WithMany("PostTags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.Tag", "Tag")
-                        .WithMany()
+                        .WithMany("PostTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -658,12 +663,12 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Tags");
+                    b.Navigation("PostTags");
                 });
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Tag", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("PostTags");
                 });
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", b =>

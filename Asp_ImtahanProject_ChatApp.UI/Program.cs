@@ -5,6 +5,7 @@ using Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework;
 using Asp_ImtahanProject_ChatApp.DataAccess.Data;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Hubs;
+using Asp_ImtahanProject_ChatApp.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,8 @@ builder.Services.AddScoped<IReplyToCommentService, ReplyToCommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserFriendService, UserFriendService>();
+
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 // Service End
 

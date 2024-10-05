@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 {
     /// <inheritdoc />
@@ -48,6 +50,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BackgroundImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsOnline = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -202,6 +205,31 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FriendshipRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Response = table.Column<bool>(type: "bit", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    OtherUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendshipRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FriendshipRequests_AspNetUsers_OtherUserId",
+                        column: x => x.OtherUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FriendshipRequests_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -209,6 +237,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageStr = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Seen = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     RecipientUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -237,8 +266,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VideoLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    TagId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -247,11 +275,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         name: "FK_Posts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Posts_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
                         principalColumn: "Id");
                 });
 
@@ -335,6 +358,15 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "5ccb6f53-6000-4d43-a3cc-78d3268d815b", null, "Admin", "ADMIN" },
+                    { "dac5e728-ab04-4243-94e6-56dd6ea4f870", null, "User", "USER" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -385,6 +417,16 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FriendshipRequests_OtherUserId",
+                table: "FriendshipRequests",
+                column: "OtherUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendshipRequests_UserId",
+                table: "FriendshipRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_RecipientUserId",
                 table: "Messages",
                 column: "RecipientUserId");
@@ -393,11 +435,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 name: "IX_Messages_UserId",
                 table: "Messages",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Posts_TagId",
-                table: "Posts",
-                column: "TagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
@@ -444,6 +481,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "FriendshipRequests");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
@@ -459,6 +499,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Tags");
+
+            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
@@ -466,9 +509,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
         }
     }
 }

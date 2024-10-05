@@ -1,6 +1,8 @@
 ﻿
 
 
+
+
 <!doctype html>
 <html lang="zxx">
 <head>
@@ -423,10 +425,11 @@
                          
                             <div class="option-item">
                                 <div class="dropdown profile-nav-item">
-                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">   @*  ----------------------------------  Profile ----------------------------------------- *@
                                         <div class="menu-profile">
-                                            <img src="~/assets/images/user/user-1.jpg" class="rounded-circle" alt="image">
-                                            <span class="name">Matthew</span>
+                                            <img id="userProfileImage" src="~/assets/images/defaultProfileImage.png" class="rounded-circle" alt="image">   
+                                            <span id="userName" class="name"></span>
                                             <span class="status-online"></span>
                                         </div>
                                     </a>
@@ -933,6 +936,7 @@
     <!-- End Go Top Area -->
     <!-- Links of JS files -->
     <script src="~/js/site.js"></script>
+    <script src="~/js/chat.js"></script>
     <script src="~/assets/js/jquery.min.js"></script>
     <script src="~/assets/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/js/jquery.magnific-popup.min.js"></script>
@@ -942,6 +946,12 @@
     <script src="~/assets/js/owl.carousel.min.js"></script>
     <script src="~/assets/js/wow.min.js"></script>
     <script src="~/assets/js/main.js"></script>
+  
+
+
+   
+
+
 </body>
 </html>
 

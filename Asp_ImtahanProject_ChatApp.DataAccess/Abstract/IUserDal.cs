@@ -10,5 +10,6 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Abstract
 {
     public interface IUserDal : IEntityRepository<User>
     {
+        Task<User> GetByIdAsync(string userId);
     }
 }
