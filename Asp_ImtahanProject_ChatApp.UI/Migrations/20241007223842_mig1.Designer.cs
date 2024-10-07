@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    [Migration("20241006160505_mig1")]
+    [Migration("20241007223842_mig1")]
     partial class mig1
     {
         /// <inheritdoc />

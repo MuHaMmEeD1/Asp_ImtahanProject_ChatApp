@@ -1,6 +1,7 @@
 ﻿using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models.CommentModels;
 using Asp_ImtahanProject_ChatApp.UI.Models.LikeModels;
+using Asp_ImtahanProject_ChatApp.UI.Models.ReplyToCommentModels;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Models.PostModels
 {
@@ -20,5 +21,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Models.PostModels
 
         public virtual ICollection<CommentModel>? Comments { get; set; }
         public virtual ICollection<LikeModel>? Likes { get; set; }
+       
     }
 }

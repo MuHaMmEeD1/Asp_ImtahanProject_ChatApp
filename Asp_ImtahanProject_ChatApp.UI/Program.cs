@@ -20,6 +20,7 @@ builder.Services.AddSignalR();
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(PostProfile));
 builder.Services.AddAutoMapper(typeof(CommentProfile));
+builder.Services.AddAutoMapper(typeof(ReplyToCommentProfile));
 
 
 // Data Access Layer (DAL) Configuration

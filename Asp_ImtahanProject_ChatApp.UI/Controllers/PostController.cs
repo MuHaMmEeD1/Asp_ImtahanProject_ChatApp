@@ -21,7 +21,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         [HttpGet("Post/GetSearchPost/{tagName}")]
         public async Task<IActionResult> GetSearchPost(string tagName)
         {
-            var posts = await _postService.GetAllAsync(p =>
+            var posts = await _postService.GetIncludeListAsync(p =>
                 p.PostTags.Any(pt => pt.Tag.Name == tagName));
 
             var postModels = _mapper.Map<List<PostModel>>(posts);

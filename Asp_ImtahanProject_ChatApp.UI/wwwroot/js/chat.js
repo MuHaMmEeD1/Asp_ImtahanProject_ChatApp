@@ -72,10 +72,13 @@ function searchPostIsTag(event) {
 }
 
 function searchPostIsTagMethod() {
+
     const searchInput = document.getElementById("searchInput");
     const postsUl = document.getElementById("postsUl");
     const userProfileImage = document.getElementById("userProfileImage");
     const myUserId = document.getElementById("myUserId");
+
+    let replyed = false;
 
     if (searchInput.value.trim() === "") {
         console.log("exit");
@@ -101,7 +104,7 @@ function searchPostIsTagMethod() {
                     let itIsMyPost = myUserId.innerHTML == post.userId;
 
                     listItem.innerHTML = `
-                        <div class="news-feed news-feed-post">
+                        <div class="news-feed news-feed-post" style=" margin-bottom: 30px; ">
                             <div class="post-header d-flex justify-content-between align-items-center">
                                 <div class="image">
                                     <a href="my-profile.html"><img src="${post.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
@@ -142,16 +145,17 @@ function searchPostIsTagMethod() {
                                     <li class="post-react">
                                         <a href="#"><i class="flaticon-like"></i><span>Like</span> <span class="number">${post.likes.$values.length}</span></a>
                                     </li>
-                                    <li class="post-comment">
-                                        <a href="#"><i class="flaticon-comment"></i><span>Comment</span> <span class="number">${post.comments.$values.length}</span></a>
+                                    <li class="post-comment" onclick="openCloseComments(event,${index})">
+                                        <a href="#"><i class="flaticon-comment" ></i>
+                                        <span>Comment</span> <span class="number">${post.comments.$values.length}</span>
+                                        </a>
                                     </li>
                                 </ul>
 
 
-                                <div id="commentDiv${index}" class="post-comment-list">
-                                           
-                                  
-                                </div>
+                               <div id="commentDiv${index}" class="post-comment-list" style="display: block;">
+
+                               </div>
 
 
                                 <form class="post-footer">
@@ -159,6 +163,8 @@ function searchPostIsTagMethod() {
                                         <a href="#"><img src="${userProfileImage.src}" class="rounded-circle" alt="image"></a>
                                     </div>
                                     <div class="form-group d-flex align-items-center">
+                                        <p id="replyUserId${index}" sytle="display: none;"></p>
+                                        <p id="addCommentInputMessage${index}">
                                         <textarea id="addCommentInput${index}" name="message" class="form-control me-2" placeholder="Write a comment..."></textarea>
                                         <button type="button" class="btn btn-primary" onclick="addCommentFunction(event, ${index}, ${post.postId})">Add Comment</button>
                                     </div>
@@ -166,7 +172,12 @@ function searchPostIsTagMethod() {
                             </div>
                         </div>
                     `;
+
+                  
+
+
                     postsUl.appendChild(listItem);
+
 
                     const commentDiv = document.getElementById(`commentDiv${index}`);
                     commentDiv.innerHTML = "";
@@ -186,7 +197,7 @@ function searchPostIsTagMethod() {
                                             <span>${comment.dateTime}</span>
                                             <p>${comment.text}</p>
                                             <ul class="comment-react">
-                                                <li><a href="#">Reply</a></li>
+                                                <li><a onclick="replyButtonFunction(event, ${index}, ${comment.userId}, ${comment.userName})" href="#">Reply</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -204,6 +215,40 @@ function searchPostIsTagMethod() {
             console.error("Error fetching posts:", status, error);
         }
     });
+}
+
+function replyButtonFunction(event, index, userId, userName) {
+
+    event.preventDefault();
+
+    const replyUserId = document.getElementById(`replyUserId${index}`);
+    const addCommentInput = document.getElementById(`addCommentInput${index}`)
+    const addCommentInputMessage = document.getElementById(`addCommentInputMessage${index}`)
+
+    addCommentInput.classList.add("active");
+
+    addCommentInputMessage.innerHTML = `reply ${userName}:`;
+    replyUserId.innerHTML = userId;
+
+    console.log("reply ok");
+
+
+
+
+}
+
+function openCloseComments(event, index) {
+    event.preventDefault(); 
+
+    const commentDiv = document.getElementById(`commentDiv${index}`);
+
+   
+    if (commentDiv.style.display === "none" || commentDiv.style.display === "") {
+        commentDiv.style.display = "block";  
+    } else {
+        commentDiv.style.display = "none";  
+    }
+
 }
 
 function addCommentFunction(event, index, postId) {

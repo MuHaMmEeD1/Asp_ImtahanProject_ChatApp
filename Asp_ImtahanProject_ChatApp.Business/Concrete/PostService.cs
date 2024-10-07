@@ -43,6 +43,11 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
             return await _postDal.GetAsync(p => p.Id == id);
         }
 
+        public async Task<IEnumerable<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null)
+        {
+            return await _postDal.GetIncludeListAsync(filter);
+        }
+
         public async Task UpdateAsync(Post post)
         {
             await _postDal.UpdateAsync(post);

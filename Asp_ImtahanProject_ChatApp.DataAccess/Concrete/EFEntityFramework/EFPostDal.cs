@@ -2,9 +2,11 @@
 using Asp_ImtahanProject_ChatApp.DataAccess.Abstract;
 using Asp_ImtahanProject_ChatApp.DataAccess.Data;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +21,23 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework
             _context = context;
         }
 
-       
+        public async Task<List<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null)
+        {
+            IQueryable<Post> query = _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.Comments)
+                    .ThenInclude(c => c.User)
+                .Include(p => p.Comments)
+                    .ThenInclude(c => c.ToComments);
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.ToListAsync();
+        }
+
+
     }
 }
