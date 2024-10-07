@@ -2,7 +2,7 @@
 
 namespace Asp_ImtahanProject_ChatApp.UI.Models.HomeModels
 {
-    public class PostModel
+    public class PostCreateModel
     {
         [Required(ErrorMessage = "Message Cannot Be Empty")]
         public string Message { get; set; }

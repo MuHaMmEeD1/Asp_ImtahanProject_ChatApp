@@ -71,10 +71,15 @@
                         </div>
 
                         <div class="search-box m-auto">
-                            <form>
-                                <input type="text" class="input-search" placeholder="Search...">
-                                <button type="submit"><i class="ri-search-line"></i></button>
-                            </form>
+                          <form >
+
+                                @* --------------------------------Search-------------------------------- *@
+
+                            <input id="searchInput" type="text" class="input-search" placeholder="Search...">
+                            <button type="button" onclick="searchPostIsTag(event)">
+                                <i class="ri-search-line"></i>
+                            </button>
+                        </form>
                         </div>
 
                         <div class="others-options d-flex align-items-center">
@@ -426,18 +431,20 @@
                             <div class="option-item">
                                 <div class="dropdown profile-nav-item">
 
-                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">   @*  ----------------------------------  Profile ----------------------------------------- *@
+                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">   
+                                        @*  ----------------------------------  Profile ----------------------------------------- *@
                                         <div class="menu-profile">
                                             <img id="userProfileImage" src="~/assets/images/defaultProfileImage.png" class="rounded-circle" alt="image">   
                                             <span id="userName" class="name"></span>
+                                            <p id="myUserId" style="display: none;"></p> 
                                             <span class="status-online"></span>
                                         </div>
                                     </a>
 
                                     <div class="dropdown-menu">
                                         <div class="profile-header">
-                                            <h3>Matthew Turner</h3>
-                                            <a href="mailto:matthew507@gmail.com">matthew507@gmail.com</a>
+                                            <h3 id="userFullName" ></h3>
+                                            <a id="userEmail" href=""></a>
                                         </div>
                                         <ul class="profile-body">
                                             <li><i class="flaticon-user"></i> <a href="/Home/MyProfile">My Profile</a></li>
@@ -935,8 +942,9 @@
     </div>
     <!-- End Go Top Area -->
     <!-- Links of JS files -->
-    <script src="~/js/site.js"></script>
-    <script src="~/js/chat.js"></script>
+    <script  src="~/js/site.js"></script>
+    <script  src="~/js/chat.js"></script>
+
     <script src="~/assets/js/jquery.min.js"></script>
     <script src="~/assets/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/js/jquery.magnific-popup.min.js"></script>

@@ -4,23 +4,25 @@ using Asp_ImtahanProject_ChatApp.DataAccess.Abstract;
 using Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework;
 using Asp_ImtahanProject_ChatApp.DataAccess.Data;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+using Asp_ImtahanProject_ChatApp.UI.AutoMapp;
 using Asp_ImtahanProject_ChatApp.UI.Hubs;
 using Asp_ImtahanProject_ChatApp.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-
 builder.Services.AddSignalR();
 
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(PostProfile));
+builder.Services.AddAutoMapper(typeof(CommentProfile));
 
 
-// Dal Start
-
+// Data Access Layer (DAL) Configuration
 builder.Services.AddScoped<ICommentDal, EFCommentDal>();
 builder.Services.AddScoped<IFriendshipRequestDal, EFFriendshipRequestDal>();
 builder.Services.AddScoped<IMessageDal, EFMessageDal>();
@@ -31,10 +33,7 @@ builder.Services.AddScoped<ITagDal, EFTagDal>();
 builder.Services.AddScoped<IUserDal, EFUserDal>();
 builder.Services.AddScoped<IUserFriendDal, EFUserFriendDal>();
 
-// Dal End
-
-// Service Start
-
+// Service Layer Configuration
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFriendshipRequestService, FriendshipRequestService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
@@ -44,31 +43,28 @@ builder.Services.AddScoped<IReplyToCommentService, ReplyToCommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserFriendService, UserFriendService>();
-
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 
-// Service End
-
-// DB Start
-
+// Database Configuration
 string connectionString = builder.Configuration.GetConnectionString("Default")!;
 
-builder.Services.AddDbContext<ZustDbContext>(option =>
+builder.Services.AddDbContext<ZustDbContext>(options =>
 {
-    option.UseSqlServer(connectionString, b => b.MigrationsAssembly("Asp_ImtahanProject_ChatApp.UI"))
-    .UseLazyLoadingProxies();
-}
-);
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Asp_ImtahanProject_ChatApp.UI"))
+           .UseLazyLoadingProxies();
+});
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ZustDbContext>()
     .AddDefaultTokenProviders();
 
-// DB End
 
-
-
-
+// Configure JSON Options for Serialization
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 
 var app = builder.Build();
 
@@ -76,7 +72,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -85,13 +80,27 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 app.UseAuthentication();
+
+app.Use(async (context, next) =>
+{
+    if (!context.User.Identity.IsAuthenticated && context.Request.Path.Value.StartsWith("/Home"))
+    {
+        context.Response.Redirect("/Register/Index");
+        return;
+    }
+    await next.Invoke();
+});
 
 app.UseAuthorization();
 
+
+
+// Map SignalR Hub
 app.MapHub<FriendHub>("/friendHub");
 
-
+// Map Controller Routes
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Register}/{action=Index}");

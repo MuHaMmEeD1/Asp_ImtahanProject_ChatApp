@@ -23,15 +23,22 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
 
             User user = await _userService.GetUserByIdAsync(userIdClaim!);
 
+            string userFullName = $"{user.FirstName} {user.LastName}";
 
-
-            await Clients.Caller.SendAsync("OnConnectedMethod", user.UserName, user.ProfileImageUrl);
+            await Clients.Caller.SendAsync("OnConnectedMethod", user.UserName, user.ProfileImageUrl, userFullName, user.Email, user.Id);
+            Console.WriteLine("connected Hub"); 
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);
         }
+
+        public async Task PostUlReflash(string tagName)
+        {
+            await Clients.All.SendAsync("PostUlReflashStart",tagName);
+        }
+
 
     }
 }

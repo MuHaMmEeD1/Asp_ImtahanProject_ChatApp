@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
+   
     public class RegisterController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -21,7 +22,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             _signInManager = signInManager;
             _userService = userService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult Index()
         {
@@ -40,7 +41,14 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                 return View(rm);
             }
 
-            var user = new User { UserName = rm.Name, Email = rm.Email };
+            var user = new User {
+                UserName = rm.Name, 
+                Email = rm.Email, 
+                ProfileImageUrl= "/assets/images/defaultProfileImage.png" ,
+                FirstName = "Default",
+                LastName = "Default"
+                
+            };
             var result = await _userManager.CreateAsync(user, rm.Password);
 
             if (result.Succeeded)
@@ -56,7 +64,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
             return View(rm);
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult Login()
         {

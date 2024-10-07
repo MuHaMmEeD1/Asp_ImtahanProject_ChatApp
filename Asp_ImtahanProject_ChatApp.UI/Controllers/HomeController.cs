@@ -27,14 +27,12 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             _postTagService = postTagService;
             _photoService = photoService;
         }
-
         public ActionResult Index()
         {
-            return View(new PostModel());
+            return View(new PostCreateModel());
         }
-
         [HttpPost]
-        public async Task<ActionResult> CreatePost(PostModel model)
+        public async Task<ActionResult> CreatePost(PostCreateModel model)
         {
             if (ModelState.IsValid)
             {
@@ -64,11 +62,15 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                 };
 
                 await _postService.AddAsync(newPost);
-              
 
                 if (!string.IsNullOrEmpty(model.Tags))
                 {
-                    var tagNames = model.Tags.Split('#').Select(t => t.Trim()).ToList();
+                   
+                    var tagNames = model.Tags
+                        .Split('#')
+                        .Select(t => t.Trim())
+                        .Where(t => !string.IsNullOrWhiteSpace(t)) 
+                        .ToList();
 
                     foreach (var tagName in tagNames)
                     {
@@ -84,12 +86,12 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                     }
                 }
 
-
                 return RedirectToAction("Index");
             }
 
             return View("Index", model);
         }
+
 
 
 

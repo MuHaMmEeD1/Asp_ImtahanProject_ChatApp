@@ -80,6 +80,29 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.ToTable("FriendshipRequests");
                 });
 
+            modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -254,20 +277,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "5ccb6f53-6000-4d43-a3cc-78d3268d815b",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "dac5e728-ab04-4243-94e6-56dd6ea4f870",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -543,6 +552,23 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Like", b =>
+                {
+                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Message", b =>
                 {
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "RecipientUser")
@@ -662,6 +688,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
 
                     b.Navigation("PostTags");
                 });

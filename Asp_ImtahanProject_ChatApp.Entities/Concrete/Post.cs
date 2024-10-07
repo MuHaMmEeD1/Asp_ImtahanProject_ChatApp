@@ -14,10 +14,13 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public string? ImageUrl { get; set; }
         public string? VideoLink { get; set; }
         public DateTime DateTime { get; set; }
+        
 
         public string? UserId { get; set; } 
         public virtual User? User { get; set; }  
 
+
+        public virtual ICollection<Like>? Likes { get; set; }
         public virtual ICollection<PostTag>? PostTags { get; set; }
 
         public virtual ICollection<Comment>? Comments { get; set; } 

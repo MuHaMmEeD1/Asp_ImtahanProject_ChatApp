@@ -16,7 +16,11 @@ SELECT * FROM AspNetUsers
 SELECT * FROM Posts
 SELECT * FROM Tags
 SELECT * FROM PostTags
+SELECT * FROM Comments
 
+--DELETE FROM Posts
+--DELETE FROM Tags
+--DELETE FROM PostTags
 
 
 ----  Post End  -----

@@ -17,20 +17,13 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Data
         }
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
 
-            builder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-                new IdentityRole { Name = "User", NormalizedName = "USER" }
-            );
-        }
 
 
 
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<FriendshipRequest> FriendshipRequests { get; set; }
+        public virtual DbSet<Like> Likes { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostTag> PostTags { get; set;}
