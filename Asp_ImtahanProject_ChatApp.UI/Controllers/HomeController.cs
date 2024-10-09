@@ -32,7 +32,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             return View(new PostCreateModel());
         }
         [HttpPost]
-        public async Task<ActionResult> CreatePost(PostCreateModel model)
+        public async Task<IActionResult> CreatePost([FromForm] PostCreateModel model)
         {
             if (ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                     if (string.IsNullOrEmpty(imageUrl))
                     {
                         ModelState.AddModelError(string.Empty, "Photo upload failed.");
-                        return View("Index", model);
+                        return Json(new { success = false, message = "Photo upload failed." });
                     }
                 }
 
@@ -65,11 +65,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
                 if (!string.IsNullOrEmpty(model.Tags))
                 {
-                   
                     var tagNames = model.Tags
                         .Split('#')
                         .Select(t => t.Trim())
-                        .Where(t => !string.IsNullOrWhiteSpace(t)) 
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
                         .ToList();
 
                     foreach (var tagName in tagNames)
@@ -86,10 +85,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                     }
                 }
 
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Post created successfully!" });
             }
 
-            return View("Index", model);
+            return Json(new { success = false, message = "Invalid form data." });
         }
 
 

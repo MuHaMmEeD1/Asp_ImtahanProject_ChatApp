@@ -615,7 +615,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.ReplyToComment", b =>
                 {
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.Comment", "Comment")
-                        .WithMany("ToComments")
+                        .WithMany("ReplyToComments")
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -682,7 +682,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Comment", b =>
                 {
-                    b.Navigation("ToComments");
+                    b.Navigation("ReplyToComments");
                 });
 
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.Post", b =>

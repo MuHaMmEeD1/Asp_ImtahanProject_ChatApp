@@ -71,6 +71,11 @@ function searchPostIsTag(event) {
   
 }
 
+
+
+
+
+
 function searchPostIsTagMethod() {
 
     const searchInput = document.getElementById("searchInput");
@@ -163,10 +168,12 @@ function searchPostIsTagMethod() {
                                         <a href="#"><img src="${userProfileImage.src}" class="rounded-circle" alt="image"></a>
                                     </div>
                                     <div class="form-group d-flex align-items-center">
-                                        <p id="replyUserId${index}" sytle="display: none;"></p>
-                                        <p id="addCommentInputMessage${index}">
-                                        <textarea id="addCommentInput${index}" name="message" class="form-control me-2" placeholder="Write a comment..."></textarea>
-                                        <button type="button" class="btn btn-primary" onclick="addCommentFunction(event, ${index}, ${post.postId})">Add Comment</button>
+                                        <p id="replyCommetnId${index}" style="display: none;"></p>
+                                        
+                                     <textarea id="addCommentInput${index}" name="message" class="form-control me-2" placeholder="Write a comment..."></textarea>
+                                    <button type="button" class="btn btn-primary" onclick="addCommentFunction(event, ${index}, ${post.postId})">Add Comment</button>
+                                    <button id="declineReplyButton${index}" style="display: none;" type="button" class="btn btn-primary ms-2" onclick="declineReplyFunction(event, ${index})">Decline Reply</button>
+
                                     </div>
                                 </form>
                             </div>
@@ -182,60 +189,131 @@ function searchPostIsTagMethod() {
                     const commentDiv = document.getElementById(`commentDiv${index}`);
                     commentDiv.innerHTML = "";
 
-                    post.comments.$values.forEach((comment, index) => {
-                        commentDiv.innerHTML += `
+                   
+
+                    post.comments.$values.forEach((comment, commentIndex) => {
+
+                        console.log(commentIndex+" Comment");
+
+                        commentDiv.innerHTML +=  `
+                            <div class="comment-list">
+                                <div class="comment-image">
+                                    <a ><img src="${comment.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
+                                </div>
+                                <div class="comment-info">
+                                    <h3>
+                                        <h4>${comment.userName}</h4>
+                                    </h3>
+                                    <span>${comment.dateTime}</span>
+                                    <p>${comment.text}</p>
+
+                                    <ul class="comment-react">
+                                        <li><a onclick="replyButtonFunction( event , ${index} , '${comment.id}', '${comment.userName}' )">Reply</a></li> 
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="replyToCommentDiv${commentIndex}" style="display: block;"   class="more-comments"></div>
+
+                            <div class="more-comments" style="margin-bottom: 20px;">
+                              <a onclick='openCloseReplyToComment(event, ${commentIndex})'>More Comments+</a>
+
+                            </div> 
+                        `;
 
 
-                              <div class="comment-list">
-                                        <div class="comment-image">
-                                    <a href="my-profile.html"><img src="${comment.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
-                                        </div>
-                                        <div class="comment-info">
-                                            <h3>
-                                                <a href="my-profile.html">${comment.userName}</a>
-                                            </h3>
-                                            <span>${comment.dateTime}</span>
-                                            <p>${comment.text}</p>
-                                            <ul class="comment-react">
-                                                <li><a onclick="replyButtonFunction(event, ${index}, ${comment.userId}, ${comment.userName})" href="#">Reply</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="more-comments">
-                                        <a href="#">More Comments+</a>
-                                    </div>
+                        const replyToCommentDiv = document.getElementById(`replyToCommentDiv${commentIndex}`);
+                        replyToCommentDiv.innerHTML = "";
 
-                        `
+                        comment.replyToComments.$values.forEach((rtc) => {
 
+
+                            replyToCommentDiv.innerHTML += `
+                             <div class="comment-list" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding-top: 30px; position: relative; left: 50px;">
+
+                               
+                                 <div class="comment-info" style="flex-grow: 1; text-align: left;">
+                                     <h4 style="margin: 0; font-size: 16px;">${rtc.userName}</h4>
+                                     <span style="font-size: 13px; color: #777;">${rtc.dateTime}</span>
+                                     <p style="font-size: 14px;">${rtc.text}</p>
+                                 </div>
+     
+                                 <div class="comment-image" style="margin-left: 10px; margin-top: 30px">
+                                     <a><img src="${rtc.userProfileImageUrl}" class="rounded-circle" alt="image" style="width: 50px; height: 50px;"></a>
+                                 </div>
+                             </div>
+                            `;
+
+
+
+
+                        });
+                       
                     })
                 });
             }
         },
         error: function (xhr, status, error) {
+            console.log('alax errore');
             console.error("Error fetching posts:", status, error);
         }
     });
 }
 
-function replyButtonFunction(event, index, userId, userName) {
+
+function declineReplyFunction(event, index) {
 
     event.preventDefault();
 
-    const replyUserId = document.getElementById(`replyUserId${index}`);
     const addCommentInput = document.getElementById(`addCommentInput${index}`)
-    const addCommentInputMessage = document.getElementById(`addCommentInputMessage${index}`)
+    const replyCommetnId = document.getElementById(`replyCommetnId${index}`);
+    const declineReplyButton = document.getElementById(`declineReplyButton${index}`);
 
-    addCommentInput.classList.add("active");
+    declineReplyButton.style.display = "none";   
+    replyCommetnId.innerHTML = "";
+    addCommentInput.placeholder = "Write a comment...";
 
-    addCommentInputMessage.innerHTML = `reply ${userName}:`;
-    replyUserId.innerHTML = userId;
+}
+
+function openCloseReplyToComment(event, index) {
+    event.preventDefault();
+
+    console.log("OC_RTC");
+    const replyToCommentDiv = document.getElementById(`replyToCommentDiv${index}`);
+
+    
+    if (replyToCommentDiv.style.display === "none" || replyToCommentDiv.style.display === "") {
+        replyToCommentDiv.style.display = "block"; 
+        console.log("ReplyToComment Open");
+
+    }
+    else {
+        replyToCommentDiv.style.display = "none";   
+        console.log("ReplyToComment Close");
+
+    }
+}
+
+
+function replyButtonFunction(event, index, commentId, userName) {
+
+    event.preventDefault();
+
+    const replyCommentId = document.getElementById(`replyCommetnId${index}`);
+    const addCommentInput = document.getElementById(`addCommentInput${index}`)
+    const declineReplyButton = document.getElementById(`declineReplyButton${index}`);
+
+
+    addCommentInput.focus();
+
+    addCommentInput.placeholder = `reply ${userName}:`;
+    replyCommentId.innerHTML = commentId;
+    declineReplyButton.style.display = "block";   
 
     console.log("reply ok");
 
-
-
-
 }
+
 
 function openCloseComments(event, index) {
     event.preventDefault(); 
@@ -244,41 +322,86 @@ function openCloseComments(event, index) {
 
    
     if (commentDiv.style.display === "none" || commentDiv.style.display === "") {
+
         commentDiv.style.display = "block";  
+        console.log("Comment Open");
     } else {
         commentDiv.style.display = "none";  
+        console.log("Comment Close");
+
     }
 
 }
 
 function addCommentFunction(event, index, postId) {
+
     event.preventDefault();
-    const addCommentInput = document.getElementById(`addCommentInput${index}`).value;
-   
+
+    const addCommentInput = document.getElementById(`addCommentInput${index}`);
+    const replyCommetnId = document.getElementById(`replyCommetnId${index}`);
+    const declineReplyButton = document.getElementById(`declineReplyButton${index}`);
+
+    const myUserId = document.getElementById("myUserId");
 
 
-    if (addCommentInput.trim() !== "") {
-        $.ajax({
-            url: '/Comment/AddComment',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                Text: addCommentInput,
-                PostId: postId,
-                UserId: myUserId.innerHTML
-            }),
-            success: function (response) {
-                console.log("Comment added successfully");
-                document.getElementById(`addCommentInput${index}`).value = '';
+    if (addCommentInput.value.trim() !== "") {
+
+        if (replyCommetnId.innerHTML.trim() !== "") {
+
+            $.ajax({
+                url: 'ReplyToComment/Add',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Text: addCommentInput.value,
+                    UserId: myUserId.innerHTML,
+                    CommentId: replyCommetnId.innerHTML,
+                }),
+                success: function (response) {
+                    console.log("Comment added successfully");
+                    addCommentInput.value = '';
+                    addCommentInput.placeholder = 'Write a comment...'
+
+                    replyCommetnId.innerHTML = '';
+                    declineReplyButton.style.display = "none";  
+
+
+                    InvokePostUlReflash();
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error adding comment:", status, error);
+                }
+
+            });
+
+
+        }
+        else {
+
+            $.ajax({
+                url: '/Comment/AddComment',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Text: addCommentInput.value,
+                    PostId: postId,
+                    UserId: myUserId.innerHTML
+                }),
+                success: function (response) {
+                    console.log("Comment added successfully");
+                    addCommentInput.value = '';
 
                
-                InvokePostUlReflash();
+                    InvokePostUlReflash();
 
-            },
-            error: function (xhr, status, error) {
-                console.error("Error adding comment:", status, error);
-            }
-        });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error adding comment:", status, error);
+                }
+            });
+        }
+
     } else {
         alert("Comment cannot be empty!");
     }
@@ -286,6 +409,30 @@ function addCommentFunction(event, index, postId) {
 
 
 
+
+function createPostFunction(event) {
+
+
+    event.preventDefault();
+
+    var formData = new FormData($('#createPostForm')[0]);
+
+    $.ajax({
+        url: '/Home/CreatePost',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (response.success) {
+                $('#createPostForm')[0].reset();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('An error occurred: ' + error);
+        }
+    });
+}
 
 
 

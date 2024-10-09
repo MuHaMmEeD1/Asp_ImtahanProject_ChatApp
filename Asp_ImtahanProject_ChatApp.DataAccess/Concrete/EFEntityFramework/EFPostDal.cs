@@ -28,7 +28,9 @@ namespace Asp_ImtahanProject_ChatApp.DataAccess.Concrete.EFEntityFramework
                 .Include(p => p.Comments)
                     .ThenInclude(c => c.User)
                 .Include(p => p.Comments)
-                    .ThenInclude(c => c.ToComments);
+                    .ThenInclude(p => p.ReplyToComments);
+                
+                   
 
             if (filter != null)
             {

@@ -10,5 +10,6 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
     public interface IReplyToCommentService
     {
         Task AddAsync(ReplyToComment replyToComment);
+        List<ReplyToComment> GetReplyToCommentList(int commentId);
     }
 }

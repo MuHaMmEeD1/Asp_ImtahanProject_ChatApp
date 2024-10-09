@@ -19,8 +19,9 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public int PostId { get; set; }
         public virtual Post? Post { get; set; }
 
+        public virtual ICollection<ReplyToComment>? ReplyToComments { get; set; }
+      
 
-        public virtual ICollection<ReplyToComment>? ToComments { get; set; }
 
     }
 }

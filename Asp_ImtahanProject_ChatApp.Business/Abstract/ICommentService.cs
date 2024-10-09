@@ -11,6 +11,7 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
     public interface ICommentService
     {
         Task AddAsync(Comment comment);
+        Task<Comment> GetByIdAsync(int id);
 
     }
 }

@@ -17,6 +17,7 @@ SELECT * FROM Posts
 SELECT * FROM Tags
 SELECT * FROM PostTags
 SELECT * FROM Comments
+SELECT * FROM ReplyToComments
 
 --DELETE FROM Posts
 --DELETE FROM Tags

@@ -22,5 +22,10 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         {
             await _commentDal.AddAsync(comment);
         }
+
+        public async Task<Comment> GetByIdAsync(int id)
+        {
+            return await _commentDal.GetAsync(c => c.Id == id);
+        }
     }
 }
