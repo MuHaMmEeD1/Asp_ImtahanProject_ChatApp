@@ -1,5 +1,5 @@
 ﻿
-using Asp_ImtahanProject_ChatApp.UI.Dtos;
+using Asp_ImtahanProject_ChatApp.UI.Models;
 using Asp_ImtahanProject_ChatApp.UI.Settings;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -20,7 +20,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Services
             _cloudinary=new Cloudinary(account);
         }
 
-        public async Task<string> UploadImageAsync(PhotoCreationDto dto)
+        public async Task<string> UploadImageAsync(PhotoCreationModel dto)
         {
             ImageUploadResult uploadedResult = new ImageUploadResult();
 

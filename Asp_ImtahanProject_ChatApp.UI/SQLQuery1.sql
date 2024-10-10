@@ -18,10 +18,12 @@ SELECT * FROM Tags
 SELECT * FROM PostTags
 SELECT * FROM Comments
 SELECT * FROM ReplyToComments
+SELECT * FROM Likes
 
 --DELETE FROM Posts
 --DELETE FROM Tags
 --DELETE FROM PostTags
+--DELETE FROM Likes
 
 
 ----  Post End  -----

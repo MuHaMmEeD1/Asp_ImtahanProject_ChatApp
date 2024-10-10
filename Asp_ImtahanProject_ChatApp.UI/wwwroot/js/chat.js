@@ -108,6 +108,18 @@ function searchPostIsTagMethod() {
                     const listItem = document.createElement('li');
                     let itIsMyPost = myUserId.innerHTML == post.userId;
 
+                    let userLikeId = -1;
+
+                    post.likes.$values.forEach((like) => {
+
+                        if (like.userId == myUserId.innerHTML) {
+                            userLikeId = like.id;
+                        }
+
+
+                    });
+
+
                     listItem.innerHTML = `
                         <div class="news-feed news-feed-post" style=" margin-bottom: 30px; ">
                             <div class="post-header d-flex justify-content-between align-items-center">
@@ -147,11 +159,29 @@ function searchPostIsTagMethod() {
                                         </iframe>
                                     </div>` : ''}
                                 <ul class="post-meta-wrap d-flex justify-content-between align-items-center">
-                                    <li class="post-react">
-                                        <a href="#"><i class="flaticon-like"></i><span>Like</span> <span class="number">${post.likes.$values.length}</span></a>
-                                    </li>
+
+
+                                <li class="post-react">
+                                    <a
+                                        id="likePostButton${index}" 
+                                        class="btn d-flex align-items-center border-0 text-decoration-none"
+                                        onclick="likePostFunction(event, ${index}, ${post.postId}, ${userLikeId})">
+                                      <i
+                                            id="likePostStyle${index}" 
+                                            class="fas fa-thumbs-up fa-3x" 
+                                            style="color: ${userLikeId > -1 ? 'blue' : 'darkgray'}; font-size: 30px;" 
+                                            title="${userLikeId > -1 ? 'Liked' : 'Like'}"></i>
+
+                                        <span class="number ml-2">${post.likes.$values.length}</span>
+                                    </a>
+                                </li>
+
+
+
+                                    
+
                                     <li class="post-comment" onclick="openCloseComments(event,${index})">
-                                        <a href="#"><i class="flaticon-comment" ></i>
+                                        <a ><i class="flaticon-comment" ></i>
                                         <span>Comment</span> <span class="number">${post.comments.$values.length}</span>
                                         </a>
                                     </li>
@@ -259,6 +289,57 @@ function searchPostIsTagMethod() {
         }
     });
 }
+
+function likePostFunction(event, index, postId, userLikeId) {
+    event.preventDefault();
+
+    const likePostStyle = document.getElementById(`likePostStyle${index}`);
+    const myUserId = document.getElementById("myUserId");
+
+    console.log(postId +" P id");
+    console.log(myUserId.innerHTML + " U id");
+    console.log(userLikeId);
+
+
+    if (likePostStyle.style.color === 'darkgray' || likePostStyle.style.color === '') {
+        likePostStyle.style.color = 'blue';
+
+        $.ajax({
+            url: '/Like/Add',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                PostId: postId,
+                UserId: myUserId.innerHTML
+            }),
+            success: function () {
+                console.log("Like added successfully");
+                InvokePostUlReflash();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: " + error);
+                console.error("Response: " + xhr.responseText);
+            }
+        });
+
+    } else {
+        likePostStyle.style.color = 'darkgray';
+
+        $.ajax({
+            url: '/Like/Delete',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Id: userLikeId
+            }),
+            success: function () {
+                InvokePostUlReflash();
+            },
+            error: function () { }
+        });
+    }
+}
+
 
 
 function declineReplyFunction(event, index) {

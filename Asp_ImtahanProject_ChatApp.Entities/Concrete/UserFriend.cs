@@ -11,6 +11,9 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
     {
         public int Id { get; set; }
         public string? UserFriendFirstId { get; set; }
+        public virtual User? UserFriendFirst { get; set; }
         public string? UserFriendSecondId { get;set; }
+        public virtual User? UserFriendSecond { get; set; }
+
     }
 }

@@ -242,12 +242,16 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("UserFriendFirstId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserFriendSecondId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserFriendFirstId");
+
+                    b.HasIndex("UserFriendSecondId");
 
                     b.ToTable("UserFriends");
                 });
@@ -627,6 +631,21 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.Navigation("Comment");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.UserFriend", b =>
+                {
+                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "UserFriendFirst")
+                        .WithMany()
+                        .HasForeignKey("UserFriendFirstId");
+
+                    b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "UserFriendSecond")
+                        .WithMany()
+                        .HasForeignKey("UserFriendSecondId");
+
+                    b.Navigation("UserFriendFirst");
+
+                    b.Navigation("UserFriendSecond");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

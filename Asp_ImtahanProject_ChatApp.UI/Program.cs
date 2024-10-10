@@ -10,8 +10,11 @@ using Asp_ImtahanProject_ChatApp.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -21,11 +24,14 @@ builder.Services.AddSignalR();
 builder.Services.AddAutoMapper(typeof(PostProfile));
 builder.Services.AddAutoMapper(typeof(CommentProfile));
 builder.Services.AddAutoMapper(typeof(ReplyToCommentProfile));
+builder.Services.AddAutoMapper(typeof(LikeProfile));
+builder.Services.AddAutoMapper(typeof(FriendshipRequestProfile));
 
 
 // Data Access Layer (DAL) Configuration
 builder.Services.AddScoped<ICommentDal, EFCommentDal>();
 builder.Services.AddScoped<IFriendshipRequestDal, EFFriendshipRequestDal>();
+builder.Services.AddScoped<ILikeDal, EFLikeDal>();
 builder.Services.AddScoped<IMessageDal, EFMessageDal>();
 builder.Services.AddScoped<IPostDal, EFPostDal>();
 builder.Services.AddScoped<IPostTagDal, EFPostTagDal>();
@@ -37,6 +43,7 @@ builder.Services.AddScoped<IUserFriendDal, EFUserFriendDal>();
 // Service Layer Configuration
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFriendshipRequestService, FriendshipRequestService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostTagService, PostTagService>();

@@ -36,11 +36,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
                         CommentId = r.CommentId
                     }).ToList()
                 }).ToList()))
-                .ForMember(dest => dest.Likes, opt => opt.MapFrom(src => src.Likes.Select(l => new LikeModel
-                {
-                    PostId = l.PostId,
-                    UserId = l.UserId
-                }).ToList()))
+                .ForMember(dest => dest.Likes, opt => opt.MapFrom(src => src.Likes))
+
                 .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes.Count))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToString("yyyy-MM-dd HH:mm")));
         }

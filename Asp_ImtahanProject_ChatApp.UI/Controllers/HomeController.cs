@@ -1,6 +1,6 @@
 ﻿using Asp_ImtahanProject_ChatApp.Business.Abstract;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
-using Asp_ImtahanProject_ChatApp.UI.Dtos;
+using Asp_ImtahanProject_ChatApp.UI.Models;
 using Asp_ImtahanProject_ChatApp.UI.Models.HomeModels;
 using Asp_ImtahanProject_ChatApp.UI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +39,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                 string? imageUrl = null;
                 if (model.Photo != null && model.Photo.Length > 0)
                 {
-                    var photoDto = new PhotoCreationDto { File = model.Photo };
+                    var photoDto = new PhotoCreationModel { File = model.Photo };
                     imageUrl = await _photoService.UploadImageAsync(photoDto);
 
                     if (string.IsNullOrEmpty(imageUrl))

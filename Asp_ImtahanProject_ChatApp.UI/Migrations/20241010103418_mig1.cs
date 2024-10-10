@@ -83,20 +83,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserFriends",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserFriendFirstId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserFriendSecondId = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserFriends", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -272,6 +258,30 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     table.ForeignKey(
                         name: "FK_Posts_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserFriends",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserFriendFirstId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserFriendSecondId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFriends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserFriends_AspNetUsers_UserFriendFirstId",
+                        column: x => x.UserFriendFirstId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserFriends_AspNetUsers_UserFriendSecondId",
+                        column: x => x.UserFriendSecondId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -484,6 +494,16 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                 name: "IX_ReplyToComments_UserId",
                 table: "ReplyToComments",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFriends_UserFriendFirstId",
+                table: "UserFriends",
+                column: "UserFriendFirstId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFriends_UserFriendSecondId",
+                table: "UserFriends",
+                column: "UserFriendSecondId");
         }
 
         /// <inheritdoc />
