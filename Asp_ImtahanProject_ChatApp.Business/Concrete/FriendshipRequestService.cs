@@ -37,7 +37,7 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
 
         public async Task<List<FriendshipRequest>> GetListAsync(string userId)
         {
-            return await _friendshipRequestDal.GetListAsync(fr=>fr.UserId == userId);
+            return await _friendshipRequestDal.GetListAsync(fr=>fr.OtherUserId == userId);
         }
     }
 }

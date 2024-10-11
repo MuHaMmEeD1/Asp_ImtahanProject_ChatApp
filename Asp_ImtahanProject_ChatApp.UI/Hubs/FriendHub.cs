@@ -26,7 +26,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
             string userFullName = $"{user.FirstName} {user.LastName}";
 
             await Clients.Caller.SendAsync("OnConnectedMethod", user.UserName, user.ProfileImageUrl, userFullName, user.Email, user.Id);
-            Console.WriteLine("connected Hub"); 
+            Console.WriteLine("connected Hub");
+            await Clients.Caller.SendAsync("FriendshipRequestReflashStart", userIdClaim);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -37,6 +38,12 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
         public async Task PostUlReflash(string tagName)
         {
             await Clients.All.SendAsync("PostUlReflashStart",tagName);
+        }
+
+        public async Task FriendshipRequestReflashStart(string outherUserId)
+        {
+
+            await Clients.Others.SendAsync("FriendshipRequestReflashStart", outherUserId);
         }
 
 

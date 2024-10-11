@@ -94,5 +94,14 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             Console.WriteLine("Invalid login attempt.");
             return View(lm);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Register");
+        }
+
     }
 }

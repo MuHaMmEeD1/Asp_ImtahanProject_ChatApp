@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    [Migration("20241010103418_mig1")]
-    partial class mig1
+    [Migration("20241011045022_mig2")]
+    partial class mig2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OtherUserId")
                         .HasColumnType("nvarchar(450)");
@@ -568,7 +571,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                         .IsRequired();
 
                     b.HasOne("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", "User")
-                        .WithMany()
+                        .WithMany("Likes")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Post");
@@ -724,6 +727,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
             modelBuilder.Entity("Asp_ImtahanProject_ChatApp.Entities.Concrete.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
 
                     b.Navigation("Posts");
 

@@ -12,7 +12,7 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
 
         public int Id { get; set; } 
         public bool? Response { get; set; }
-
+        public DateTime DateTime { get; set; }
 
 
         public string? UserId { get; set; }

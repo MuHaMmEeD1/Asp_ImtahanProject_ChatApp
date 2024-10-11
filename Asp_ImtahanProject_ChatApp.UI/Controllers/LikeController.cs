@@ -2,7 +2,10 @@
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models.LikeModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+[Authorize]
 
 public class LikeController : Controller
 {

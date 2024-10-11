@@ -30,7 +30,6 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public bool IsOnline { get; set; }
  
 
-        public virtual ICollection<UserFriend>? UserFriends { get; set; }
         public virtual ICollection<Like>? Likes { get; set; }
         public virtual ICollection<Post>? Posts { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }

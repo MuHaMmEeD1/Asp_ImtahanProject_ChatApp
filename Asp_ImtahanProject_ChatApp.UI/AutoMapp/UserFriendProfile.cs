@@ -1,4 +1,5 @@
-﻿using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+﻿using Asp_ImtahanProject_ChatApp.Business.Abstract;
+using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models.UserFriendModels;
 using AutoMapper;
 using System.Security.Claims;
@@ -8,10 +9,13 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
     public class UserFriendProfile : Profile
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserFriendService _userFriendService;
 
-        public UserFriendProfile(IHttpContextAccessor httpContextAccessor)
+        public UserFriendProfile() : this(null, null) { }
+        public UserFriendProfile(IHttpContextAccessor httpContextAccessor, IUserFriendService userFriendService)
         {
             _httpContextAccessor = httpContextAccessor;
+            _userFriendService = userFriendService;
 
 
             CreateMap<UserFriend, UserFrienModel>()
@@ -25,7 +29,6 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
 
 
             CreateMap<UserFriendCreateModel, UserFriend>();
-
         }
 
 
@@ -88,16 +91,16 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
             return likeCount;
 
         }
-        private int GetOuthetFriendCount(User userFirst, User userSecound)
+        private async Task<int> GetOuthetFriendCount(User userFirst, User userSecound)
         {
             
             if (userFirst.Id == GetCurrentUserId())
             {
-               
-                return userFirst.UserFriends.Count;
+
+                return (await _userFriendService.GetUserFriendsOrUFFListAsync(userFirst.Id)).Count;
             }
 
-            return userSecound.UserFriends.Count;
+            return (await _userFriendService.GetUserFriendsOrUFFListAsync(userSecound.Id)).Count;
 
         }
         private bool ThisMyFriendCheck(User userFirst, User userSecound)

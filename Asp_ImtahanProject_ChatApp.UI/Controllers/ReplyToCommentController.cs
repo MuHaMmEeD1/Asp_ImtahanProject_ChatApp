@@ -2,10 +2,13 @@
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models.ReplyToCommentModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
+    [Authorize]
+
     public class ReplyToCommentController : Controller
     {
         private readonly IMapper _mapper;

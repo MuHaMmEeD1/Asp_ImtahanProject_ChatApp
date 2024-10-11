@@ -2,15 +2,19 @@
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models.UserFriendModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices.Marshalling;
 using System.Security.Claims;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
+    [Authorize]
+
     public class UserFriendController : Controller
     {
         private readonly IUserFriendService _userFriendService;
+
         private readonly IMapper _mapper;
 
         public UserFriendController(IUserFriendService userFriendService, IMapper mapper)
@@ -53,7 +57,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
                 if (friend.UserFriendFirstId != userId)
                 {
-                    friendsOfFriend = friend.UserFriendFirst.UserFriends
+                    friendsOfFriend = (await _userFriendService.GetUserFriendsOrUFFListAsync(friend.UserFriendFirst.Id))
                         .Where(uff => uff.UserFriendFirstId != userId && uff.UserFriendSecondId != userId)
                         .ToList();
 
@@ -71,7 +75,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                 }
                 else if (friend.UserFriendSecondId != userId)
                 {
-                    friendsOfFriend = friend.UserFriendSecond.UserFriends
+                    friendsOfFriend = (await _userFriendService.GetUserFriendsOrUFFListAsync(friend.UserFriendSecond.Id))
                         .Where(uff => uff.UserFriendFirstId != userId && uff.UserFriendSecondId != userId)
                         .ToList();
 
