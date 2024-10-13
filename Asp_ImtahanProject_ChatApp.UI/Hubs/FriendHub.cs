@@ -22,17 +22,25 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
             string? userIdClaim = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             User user = await _userService.GetUserByIdAsync(userIdClaim!);
+            user.IsOnline = true;
+            await _userService.UpdateAsync(user);
+
 
             string userFullName = $"{user.FirstName} {user.LastName}";
 
             await Clients.Caller.SendAsync("OnConnectedMethod", user.UserName, user.ProfileImageUrl, userFullName, user.Email, user.Id);
             Console.WriteLine("connected Hub");
-            await Clients.Caller.SendAsync("FriendshipRequestReflashStart", userIdClaim);
+            await Clients.Caller.SendAsync("HeaderReflash", userIdClaim);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);
+            string? userIdClaim = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            User user = await _userService.GetUserByIdAsync(userIdClaim!);
+            user.IsOnline = false;
+            await _userService.UpdateAsync(user);
         }
 
         public async Task PostUlReflash(string tagName)
@@ -40,12 +48,25 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
             await Clients.All.SendAsync("PostUlReflashStart",tagName);
         }
 
-        public async Task FriendshipRequestReflashStart(string outherUserId)
+        public async Task PostUlReflash_ID(string userId)
         {
-
-            await Clients.Others.SendAsync("FriendshipRequestReflashStart", outherUserId);
+            await Clients.All.SendAsync("PostUlReflash_ID_Start", userId);
         }
 
+        public async Task HeaderReflash(string userId)
+        {
+            await Clients.All.SendAsync("HeaderReflash", userId);
+        }
 
+        public async Task FriendsReflash(string userId)
+        {
+            await Clients.All.SendAsync("FriendsReflash", userId);
+        }
+
+        public async Task MessageReflash(string userId, string otherUserId,string otherProfileUrl,string otherUserName)
+        {
+            await Clients.All.SendAsync("MessageReflash", userId, otherUserId, otherProfileUrl, otherUserName);
+        }
+             
     }
 }

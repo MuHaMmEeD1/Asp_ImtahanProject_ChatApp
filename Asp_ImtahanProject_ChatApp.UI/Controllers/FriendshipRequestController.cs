@@ -9,6 +9,7 @@ using System.Security.Claims;
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
     [Authorize]
+
     public class FriendshipRequestController : Controller
     {
         private readonly IFriendshipRequestService _friendshipRequestService;
@@ -34,16 +35,37 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetListDidItAppear()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<FriendshipRequestModel> friendshipRequestModel = _mapper.Map<List<FriendshipRequestModel>>(await _friendshipRequestService.GetListDidItAppearAsync(userId));
+
+            return Ok(friendshipRequestModel);
+
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetListUnanswered()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<FriendshipRequestModel> friendshipRequestModel = _mapper.Map<List<FriendshipRequestModel>>(await _friendshipRequestService.GetListuUnansweredAsync(userId));
+
+            return Ok(friendshipRequestModel);
+
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetCheckMyFriend(FriendshipRequestGetByIdModel model)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<UserFriend> userFriendList = await _userFriendService.GetUserFriendsOrUFFListAsync(userId);
 
             UserFriend userFriend = userFriendList.Find(uf=>uf.UserFriendFirstId == model.OutherUserId || uf.UserFriendSecondId == model.OutherUserId);
+            
 
-
-            ///
-            List<FriendshipRequest> myList = await _friendshipRequestService.GetListAsync(userId);
+            
             List<FriendshipRequest> outherList = await _friendshipRequestService.GetListAsync(model.OutherUserId);
 
 
@@ -54,19 +76,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
 
          
-            foreach (var item in myList)
-            {
-
-                if (item.UserId == model.OutherUserId)
-                {
-                    FRCheck = true;
-                    break;
-                }
-            }
+            
 
 
-            if (!FRCheck)
-            {
+           
 
                 foreach (var item in outherList)
                 {
@@ -76,7 +89,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                         break;
                     }
                 }
-            }
+            
       
 
 
@@ -101,6 +114,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         {
             FriendshipRequest friendshipRequest = _mapper.Map<FriendshipRequest>(model);
             friendshipRequest.DateTime = DateTime.Now;
+            friendshipRequest.DidItAppear = false;
 
             await _friendshipRequestService.AddAsync(friendshipRequest);
             
@@ -117,6 +131,29 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             return Ok(model);
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUsOuId([FromBody] FriendshipRequestDeleteUsOuIdModel model)
+
+        {
+            await _friendshipRequestService.DeleteUserIdAndOutherIdAsync(model.UserId, model.OtherUserId);
+
+            return Ok(model);
+
+        }       
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] FriendshipRequestUpdateModel model)
+        {
+
+            FriendshipRequest friendshipRequest = await _friendshipRequestService.GetByIdAsync(model.Id);
+
+            friendshipRequest.DidItAppear = model.DidItAppear;
+
+            await _friendshipRequestService.UpdateAsync(friendshipRequest);
+            return Ok(model);
+
+        }
+
 
     }
 }

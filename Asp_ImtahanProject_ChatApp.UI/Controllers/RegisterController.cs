@@ -42,12 +42,13 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             }
 
             var user = new User {
-                UserName = rm.Name, 
-                Email = rm.Email, 
-                ProfileImageUrl= "/assets/images/defaultProfileImage.png" ,
+                UserName = rm.Name,
+                Email = rm.Email,
+                ProfileImageUrl = "/assets/images/defaultProfileImage.png",
+                BackgroundImageUrl = "/assets/images/DefaultBackgroundProfileImage.png",
                 FirstName = "Default",
                 LastName = "Default"
-                
+
             };
             var result = await _userManager.CreateAsync(user, rm.Password);
 

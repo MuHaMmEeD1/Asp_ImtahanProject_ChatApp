@@ -13,6 +13,7 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
         Task AddAsync(Post post);
         Task<Post> GetByIdAsync(int id);
         Task<IEnumerable<Post>> GetAllAsync(Expression<Func<Post, bool>> filter = null);
+        Task<List<Post>> GetFrendsPostsAsync(string userId);
         Task<IEnumerable<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null);
         Task UpdateAsync(Post post);
         Task DeleteAsync(int id);

@@ -13,10 +13,12 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
     public class PostService : IPostService
     {
         private readonly IPostDal _postDal;
+        private readonly IUserFriendService _userFriendService;
 
-        public PostService(IPostDal postDal)
+        public PostService(IPostDal postDal, IUserFriendService userFriendService)
         {
             _postDal = postDal;
+            _userFriendService = userFriendService;
         }
 
         public async Task AddAsync(Post post)
@@ -41,6 +43,13 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         public async Task<Post> GetByIdAsync(int id)
         {
             return await _postDal.GetAsync(p => p.Id == id);
+        }
+
+        public async Task<List<Post>> GetFrendsPostsAsync(string userId)
+        {
+           
+            return await _userFriendService.GetUserFriendsPostsListAsync(userId);
+
         }
 
         public async Task<IEnumerable<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null)

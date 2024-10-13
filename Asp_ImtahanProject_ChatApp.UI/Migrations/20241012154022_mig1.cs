@@ -195,6 +195,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Response = table.Column<bool>(type: "bit", nullable: true),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DidItAppear = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OtherUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },

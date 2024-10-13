@@ -23,5 +23,10 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         {
             return await _userDal.GetByIdAsync(userId);
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            await _userDal.UpdateAsync(user);
+        }
     }
 }

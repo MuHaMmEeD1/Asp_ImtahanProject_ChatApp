@@ -65,6 +65,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("DidItAppear")
+                        .HasColumnType("bit");
+
                     b.Property<string>("OtherUserId")
                         .HasColumnType("nvarchar(450)");
 

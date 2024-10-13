@@ -27,6 +27,7 @@ builder.Services.AddAutoMapper(typeof(ReplyToCommentProfile));
 builder.Services.AddAutoMapper(typeof(LikeProfile));
 builder.Services.AddAutoMapper(typeof(FriendshipRequestProfile));
 builder.Services.AddAutoMapper(typeof(UserFriendProfile));
+builder.Services.AddAutoMapper(typeof(MessageProfile));
 
 
 // Data Access Layer (DAL) Configuration
@@ -112,6 +113,6 @@ app.MapHub<FriendHub>("/friendHub");
 // Map Controller Routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Register}/{action=Index}");
+    pattern: "{controller=Register}/{action=Login}");
 
 app.Run();

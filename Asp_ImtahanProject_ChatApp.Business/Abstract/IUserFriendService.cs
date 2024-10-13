@@ -11,8 +11,10 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
     {
         Task AddAsync(UserFriend userFriend);
         Task DeleteAsync(int id);
+        Task DeleteUserIdAdnOutherIdAsync(string userId, string outherId);
         Task<List<UserFriend>> GetUserFriendsOrUFFListAsync(string myUserId, string outherUserName = "");
-
+        Task<List<Post>> GetUserFriendsPostsListAsync(string userId);
+        
 
 
     }

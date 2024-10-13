@@ -15,6 +15,7 @@ namespace Asp_ImtahanProject_ChatApp.Entities.Concrete
         public DateTime DateTime { get; set; }
 
 
+        public bool DidItAppear { get; set; }
         public string? UserId { get; set; }
         public virtual User? User { get; set; }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    [Migration("20241011045022_mig2")]
-    partial class mig2
+    [Migration("20241012154022_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Migrations
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("DidItAppear")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OtherUserId")
                         .HasColumnType("nvarchar(450)");

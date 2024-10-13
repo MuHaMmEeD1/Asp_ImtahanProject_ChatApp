@@ -109,7 +109,7 @@
 
                         <div class="form-group">
                             <p style="color: black; padding-top: 20px;">Photo Url</p>
-                            <label asp-for="@Model.Photo" style="position: relative; bottom: 10px; padding-bottom: 10px;">
+                            <label asp-for="@Model.Photo" id="ImageUrlLabel" style="position: relative; bottom: 10px; padding-bottom: 10px;">
                                 @(Model.Photo?.FileName ?? "Image Not Selected")
                             </label>
                             <input asp-for="@Model.Photo" type="file" class="form-control-file" style="display: none;" onchange="updateLabel(this)">

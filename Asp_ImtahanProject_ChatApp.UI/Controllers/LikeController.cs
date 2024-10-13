@@ -18,6 +18,7 @@ public class LikeController : Controller
         _likeService = likeService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Add([FromBody]LikeCreateModel model)
     {

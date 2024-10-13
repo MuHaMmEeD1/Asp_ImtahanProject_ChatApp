@@ -78,6 +78,7 @@
 
                                 @* --------------------------------Search-------------------------------- *@
 
+                                <p style="display: none;" id="searchInputValue"></p>
                                 <input id="searchInput" type="text" class="input-search" placeholder="Search...">
                                 <button type="button" onclick="searchPostIsTag(event)">
                                     <i class="ri-search-line"></i>
@@ -90,11 +91,12 @@
                                 <a href="/Home/Index" class="home-btn"><i class="flaticon-home"></i></a>
                             </div>
                             <div class="option-item">
+
                                 <div class="dropdown friend-requests-nav-item">
                                     <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div class="friend-requests-btn">
                                             <i class="flaticon-user"></i>
-                                            <span>3</span>
+                                            <span style="display: none;" id="replyToFriendshipRequestSapanCount">0</span>
                                         </div>
                                     </a>
 
@@ -104,29 +106,18 @@
                                             <i class="flaticon-menu"></i>
                                         </div>
 
-                                        <div class="friend-requests-body" data-simplebar>
-                                            <div class="item d-flex align-items-center">
-                                                <div class="figure">
-                                                    <a href="#"><img src="~/assets/images/user/user-2.jpg" class="rounded-circle" alt="image"></a>
-                                                </div>
+                                       
 
-                                                <div class="content d-flex justify-content-between align-items-center">
-                                                    <div class="text">
-                                                        <h4><a href="#">Sandra Cross</a></h4>
-                                                        <span>26 Friends</span>
-                                                    </div>
-                                                    <div class="btn-box d-flex align-items-center">
-                                                        <button class="delete-btn d-inline-block me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="button"><i class="ri-close-line"></i></button>
-
-                                                        <button class="confirm-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" type="button"><i class="ri-check-line"></i></button>
-                                                    </div>
+                                            <div class="friend-requests-body" data-simplebar>
+                                                <div id="replyToFriendshipRequestListDiv">
+                                                 
                                                 </div>
-                                            </div>
                                          
-                                            <div class="view-all-requests-btn">
-                                                <a href="friends.html" class="default-btn">View All Requests</a>
+                                                <div class="view-all-requests-btn">
+                                                    <a href="friends.html" class="default-btn">View All Requests</a>
+                                                </div>
                                             </div>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -144,12 +135,7 @@
                                             <h3>Messages</h3>
                                             <i class="flaticon-menu"></i>
                                         </div>
-                                        <div class="messages-search-box">
-                                            <form>
-                                                <input type="text" class="input-search" placeholder="Search Message...">
-                                                <button type="submit"><i class="ri-search-line"></i></button>
-                                            </form>
-                                        </div>
+                                      
                                         <div class="messages-body" data-simplebar>
                                             <div class="item d-flex justify-content-between align-items-center">
                                                 <div class="figure">
@@ -167,15 +153,18 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
                             <div class="option-item">
                                 <div class="dropdown notifications-nav-item">
                                         @*  ____________________________________________________  FriendshieRequest _____________________________________________ *@
                                   
-                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a onclick="notificationsClickEvent(event)" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div class="notifications-btn">
-                                            <i class="flaticon-bell"></i>
-                                            <span id="friendshipRequestSpanCount">10</span>
+                                            <div  > 
+
+                                                <i class="flaticon-bell"></i>
+                                                <span style="display: none;" id="friendshipRequestSpanCount">0</span>
+                                            </div>
                                         </div>
                                     </a>
 
@@ -184,7 +173,7 @@
                                             <h3>Notifications</h3>
                                             <i class="flaticon-menu"></i>
                                         </div>
-                                        <div id="friendshipRequestListDiv" class="notifications-body" data-simplebar>vv
+                                        <div id="friendshipRequestListDiv" class="notifications-body" data-simplebar>
                                            
                                            
                                         </div>
@@ -247,7 +236,7 @@
             <div class="sidemenu-body">
                 <ul class="sidemenu-nav metisMenu h-100" id="sidemenu-nav" data-simplebar>
                     <li class="nav-item">
-                        <a href="/Home" class="nav-link">
+                        <a href="/Home/Index" class="nav-link">
                             <span class="icon"><i class="flaticon-newspaper"></i></span>
                             <span class="menu-title">News Feed</span>
                         </a>

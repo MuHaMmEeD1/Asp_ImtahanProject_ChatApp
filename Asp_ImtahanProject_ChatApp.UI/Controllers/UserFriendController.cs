@@ -13,120 +13,76 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
     public class UserFriendController : Controller
     {
-        private readonly IUserFriendService _userFriendService;
-
+        private readonly IUserFriendService _userFriendService; 
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserFriendController(IUserFriendService userFriendService, IMapper mapper)
+        public UserFriendController(IUserFriendService userFriendService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _userFriendService = userFriendService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Get(UserFriendSearchModel? model)
+        public async Task<IActionResult> Get(string? UserName)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<UserFriend> userFriends;
 
-            if (model != null)
+            if (UserName != null)
             {
-                userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId, model.UserName);
+                userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId, UserName);
             }
             else
             {
                 userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId);
             }
 
-            if (userFriends.Count >= 8)
+            var mappUserFriends = _mapper.Map<List<UserFrienModel>>(userFriends, opts =>
             {
-                List<UserFrienModel> userFrienModel_ = _mapper.Map<List<UserFrienModel>>(userFriends);
-                return Ok(userFrienModel_);
+                opts.Items["HttpContextAccessor"] = _httpContextAccessor;
+                opts.Items["UserFriendService"] = _userFriendService;
+            });
+
+            return Ok(mappUserFriends);
+        }   
+        
+        
+        [HttpGet]
+        public async Task<IActionResult> FriendsMessages(string? UserName)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<UserFriend> userFriends;
+
+            if (UserName != null)
+            {
+                userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId, UserName);
+            }
+            else
+            {
+                userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId);
             }
 
-            int realUserNumber = 8 - userFriends.Count;
-            List<UserFriend> extentionUserFriends = new List<UserFriend>();
-
-            foreach (var friend in userFriends)
+            var mappUserFriends = _mapper.Map<List<UserFriendMessageModel>>(userFriends, opts =>
             {
-                if (extentionUserFriends.Count >= realUserNumber)
-                    break;
+                opts.Items["HttpContextAccessor"] = _httpContextAccessor;
+                opts.Items["UserFriendService"] = _userFriendService;
+            });
 
-                List<UserFriend> friendsOfFriend = new List<UserFriend>();
-
-                if (friend.UserFriendFirstId != userId)
-                {
-                    friendsOfFriend = (await _userFriendService.GetUserFriendsOrUFFListAsync(friend.UserFriendFirst.Id))
-                        .Where(uff => uff.UserFriendFirstId != userId && uff.UserFriendSecondId != userId)
-                        .ToList();
-
-                    foreach (var uff in friendsOfFriend)
-                    {
-                        if (uff.UserFriendFirstId == friend.UserFriendFirstId)
-                        {
-                            uff.UserFriendFirstId = uff.UserFriendSecondId;
-                        }
-                        else if (uff.UserFriendSecondId == friend.UserFriendFirstId)
-                        {
-                            uff.UserFriendSecondId = uff.UserFriendFirstId;
-                        }
-                    }
-                }
-                else if (friend.UserFriendSecondId != userId)
-                {
-                    friendsOfFriend = (await _userFriendService.GetUserFriendsOrUFFListAsync(friend.UserFriendSecond.Id))
-                        .Where(uff => uff.UserFriendFirstId != userId && uff.UserFriendSecondId != userId)
-                        .ToList();
-
-                    foreach (var uff in friendsOfFriend)
-                    {
-                        if (uff.UserFriendFirstId == friend.UserFriendSecondId)
-                        {
-                            uff.UserFriendFirstId = uff.UserFriendSecondId;
-                        }
-                        else if (uff.UserFriendSecondId == friend.UserFriendSecondId)
-                        {
-                            uff.UserFriendSecondId = uff.UserFriendFirstId;
-                        }
-                    }
-                }
-
-                foreach (var fof in friendsOfFriend)
-                {
-                    if (extentionUserFriends.Count < realUserNumber)
-                    {
-                        extentionUserFriends.Add(fof);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            userFriends.AddRange(extentionUserFriends);
-
-            if (userFriends.Count < 8)
-            {
-                return Ok(new
-                {
-                    Friends = userFriends,
-                    Remaining = 8 - userFriends.Count
-                });
-            }
-
-            userFriends = userFriends.Take(8).ToList();
-            List<UserFrienModel> userFrienModel = _mapper.Map<List<UserFrienModel>>(userFriends);
-
-            return Ok(userFrienModel);
+            return Ok(mappUserFriends);
         }
 
 
 
+
         [HttpPost]
-        public async Task<IActionResult> Add(UserFriendCreateModel model)
+        public async Task<IActionResult> Add([FromBody]UserFriendCreateModel model)
         {
+
+
+            Console.WriteLine(model == null ? "NULL":"NOT NULL");
 
             UserFriend userFriend = _mapper.Map<UserFriend>(model);
             await _userFriendService.AddAsync(userFriend);
@@ -136,10 +92,18 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(UserFriendDeleteModel model)
+        public async Task<IActionResult> Delete([FromBody] UserFriendDeleteModel model)
         {
 
             await _userFriendService.DeleteAsync(model.Id);
+
+            return Ok(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteUsOuId([FromBody] UserFriendDeleteUsOuModel model)
+        {
+
+            await _userFriendService.DeleteUserIdAdnOutherIdAsync(model.UserId, model.OtherUserId);
 
             return Ok(model);
         }

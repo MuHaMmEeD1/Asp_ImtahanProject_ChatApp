@@ -30,19 +30,64 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
             await _userFriendDal.DeleteAsync(userFriend);
         }
 
-        public async Task<List<UserFriend>> GetUserFriendsOrUFFListAsync(string myUserId , string outherUserName = "")
+        public async Task DeleteUserIdAdnOutherIdAsync(string userId, string outherId)
         {
+            UserFriend userFriend = (await _userFriendDal.GetListAsync(ufd => (ufd.UserFriendFirstId == userId && ufd.UserFriendSecondId == outherId) || (ufd.UserFriendFirstId == outherId && ufd.UserFriendSecondId == userId)))[0];
 
-            return outherUserName == "" ?
-                  await _userFriendDal.GetListAsync(uf => uf.UserFriendFirstId == myUserId || uf.UserFriendSecondId == myUserId)
-                 :
-                  await _userFriendDal.GetListAsync(uf => (uf.UserFriendFirstId == myUserId && (uf.UserFriendSecond.FirstName+ " "+ uf.UserFriendSecond.LastName) == outherUserName) 
-                  ||
-                  (uf.UserFriendSecondId == myUserId && (uf.UserFriendFirst.FirstName+" "+uf.UserFriendFirst.LastName) == outherUserName));
+            await _userFriendDal.DeleteAsync(userFriend);
+        }
+
+        public async Task<List<UserFriend>> GetUserFriendsOrUFFListAsync(string myUserId, string outherUserName = "")
+        {
+            if (string.IsNullOrEmpty(outherUserName))
+            {
+                return await _userFriendDal.GetListAsync(uf => uf.UserFriendFirstId == myUserId || uf.UserFriendSecondId == myUserId);
+            }
+
+            var userFriends = await _userFriendDal.GetListAsync(uf =>
+                (uf.UserFriendFirstId == myUserId && (uf.UserFriendSecond.FirstName + " " + uf.UserFriendSecond.LastName).ToLower().Contains(outherUserName.ToLower()))
+                ||
+                (uf.UserFriendSecondId == myUserId && (uf.UserFriendFirst.FirstName + " " + uf.UserFriendFirst.LastName).ToLower().Contains(outherUserName.ToLower())));
+
+            return userFriends
+                .OrderByDescending(uf =>
+                    (uf.UserFriendFirstId == myUserId && (uf.UserFriendSecond.FirstName + " " + uf.UserFriendSecond.LastName).ToLower().StartsWith(outherUserName.ToLower()))
+                    ||
+                    (uf.UserFriendSecondId == myUserId && (uf.UserFriendFirst.FirstName + " " + uf.UserFriendFirst.LastName).ToLower().StartsWith(outherUserName.ToLower())) ? 1 : 0)
+                .ThenBy(uf => uf.UserFriendFirstId == myUserId ?
+                    (uf.UserFriendSecond.FirstName + " " + uf.UserFriendSecond.LastName)
+                    : (uf.UserFriendFirst.FirstName + " " + uf.UserFriendFirst.LastName))
+                .ToList();
+        }
 
 
+        public async Task<List<Post>> GetUserFriendsPostsListAsync(string userId)
+        {
+            List<Post> posts = new List<Post>();
+
+            var postListFirst =   (await _userFriendDal.GetListAsync(ufd => (ufd.UserFriendFirstId == userId ))).Select(uf => uf.UserFriendSecond.Posts);
+
+            var postListSecound = (await _userFriendDal.GetListAsync(ufd => (ufd.UserFriendSecondId == userId))).Select(uf => uf.UserFriendFirst.Posts);
 
 
+            foreach (var item1 in postListFirst)
+            {
+                foreach (var item2 in item1)
+                {
+                    posts.Add(item2);
+                }
+            }  
+            
+            foreach (var item1 in postListSecound)
+            {
+                foreach (var item2 in item1)
+                {
+                    posts.Add(item2);
+                }
+            }
+
+
+            return posts;
 
         }
     }

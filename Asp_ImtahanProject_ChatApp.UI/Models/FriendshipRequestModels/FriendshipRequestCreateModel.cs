@@ -5,6 +5,8 @@
 
         public string? UserId { get; set; }
         public string? OtherUserId { get; set; }
+        public bool? Response { get; set; }
+
 
     }
 }

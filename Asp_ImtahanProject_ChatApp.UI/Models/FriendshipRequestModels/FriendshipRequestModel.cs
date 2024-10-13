@@ -8,5 +8,7 @@
         public bool? Response { get; set; }
         public string? DateTime { get; set; }
         public string? OtherUserId { get; set; }
+        public bool DidItAppear { get; set; }
+
     }
 }
