@@ -2,7 +2,7 @@
 USE ZustDb
 
 SELECT * FROM AspNetUsers 
-SELECT A.UserName , A.IsOnline FROM AspNetUsers AS A
+SELECT A.UserName , A.IsOnline, A.Email FROM AspNetUsers AS A
 
 
 --  DELETE FROM AspNetUsers   --WHERE UserName = ''

@@ -5,7 +5,9 @@ using Asp_ImtahanProject_ChatApp.UI.Models.HomeModels;
 using Asp_ImtahanProject_ChatApp.UI.Models.UserModels;
 using Asp_ImtahanProject_ChatApp.UI.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Security.Claims;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
@@ -25,6 +27,121 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             _postService = postService;
             _photoService = photoService;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateSetting([FromBody] UserSetlingsModel model)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.BackupEmail = model.BackupEmail;
+            DateTime dateTime;
+            DateTime.TryParse(model.DateOfBirth, out dateTime);
+            user.DateOfBirth = dateTime;
+            user.PhoneNo = model.PhoneNo;
+            user.Occupation = model.Occupation;
+            user.Gender = model.Gender;
+            user.RelationStatus = model.RelationStatus;
+            user.BloodGroup = model.BloodGroup;
+            user.Website = model.Website;
+            user.Language = model.Language;
+            user.Address = model.Address;
+            user.City = model.City;
+            user.State = model.State;
+            user.Country = model.Country;
+
+            await _userService.UpdateAsync(user);
+
+
+            return Ok(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword([FromBody] UserSettingPasswordModel model)
+        {
+            if (model == null ||
+                string.IsNullOrEmpty(model.CurrentPasswordFirst) ||
+                string.IsNullOrEmpty(model.CurrentPasswordSecond) ||
+                string.IsNullOrEmpty(model.NewPassword))
+            {
+                return BadRequest("Invalid input data.");
+            }
+
+            if (model.CurrentPasswordFirst != model.CurrentPasswordSecond)
+            {
+                return BadRequest("Current passwords do not match.");
+            }
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var isPasswordValid = await _userService.VerifyPasswordAsync(user, model.CurrentPasswordFirst);
+            if (!isPasswordValid)
+            {
+                return BadRequest("Current password is incorrect.");
+            }
+
+            var result = await _userService.ChangePasswordAsync(user, model.NewPassword);
+
+            if (!result)
+            {
+                return BadRequest("Failed to update password.");
+            }
+
+            return Ok("Password updated successfully.");
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateMain([FromBody] UserSettingMainModel model)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+            user.PhoneNo = model.PhoneNo;            
+            user.Country = model.Country;
+
+            await _userService.UpdateAsync(user);
+
+
+            return Ok(model);
+        }
+
+
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> SettingAllData(UserSetlingsModel model)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            UserSetlingsModel userSetlingsModel = _mapper.Map<UserSetlingsModel>(user);
+
+            
+
+
+            return Ok(userSetlingsModel);
+        } 
+        
+
+
 
         [HttpGet]
         public async Task<IActionResult> ProfileUser()
@@ -58,19 +175,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update([FromBody]UserSetlingsModel model)
-        {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            User user = _mapper.Map<User>(model);
-            user.Id = userId;
-
-            await _userService.UpdateAsync(user);
-
-
-            return Ok();
-        }
+     
 
 
         [HttpPost]

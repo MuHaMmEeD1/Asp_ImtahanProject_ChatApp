@@ -2,7 +2,9 @@
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
 using Asp_ImtahanProject_ChatApp.UI.Models;
 using Asp_ImtahanProject_ChatApp.UI.Models.HomeModels;
+using Asp_ImtahanProject_ChatApp.UI.Models.UserModels;
 using Asp_ImtahanProject_ChatApp.UI.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +21,17 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         private readonly ITagService _tagService;
         private readonly IPostTagService _postTagService;
         private readonly IPhotoService _photoService;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public HomeController(IPostService postService, ITagService tagService, IPostTagService postTagService, IPhotoService photoService)
+        public HomeController(IPostService postService, ITagService tagService, IPostTagService postTagService, IPhotoService photoService, IUserService userService, IMapper mapper)
         {
             _postService = postService;
             _tagService = tagService;
             _postTagService = postTagService;
             _photoService = photoService;
+            _userService = userService;
+            _mapper = mapper;
         }
         public ActionResult Index()
         {
@@ -114,8 +120,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             return View();
         }
 
-        public ActionResult Setting()
+        public async Task<IActionResult> Setting()
         {
+       
+
             return View();
         }
     }

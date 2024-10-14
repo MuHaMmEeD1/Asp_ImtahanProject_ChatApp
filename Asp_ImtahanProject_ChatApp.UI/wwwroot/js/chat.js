@@ -40,11 +40,16 @@ connection.on("OnConnectedMethod", (name, imageUrl, fullName, Email, id) => {
     }
     else if (currentUrl.toLowerCase() == "/home/messages") {
         showUserFriendMessage();
-    } else if (currentUrl.toLowerCase() == "/home/myprofile") {
+    }
+    else if (currentUrl.toLowerCase() == "/home/myprofile") {
 
         console.log("/home/myprofile Ok");
         showMainProfileDiv();
         showProfilePosts();
+    }
+    else if (currentUrl.toLowerCase() == "/home/setting") {
+
+        showSettingAll();
     }
     showContacts()
     showVideos();
@@ -247,14 +252,14 @@ function showVideos() {
         const myUserId = document.getElementById("myUserId");
 
         $.ajax({
-            url: `/Post/MyFriendVideoPosts/${myUserId.innerHTML}`, 
+            url: `/Post/MyFriendVideoPosts/${myUserId.innerHTML}`,
             type: 'GET',
             success: function (postModels) {
 
                 const videoDiv = document.getElementById("videoDiv");
 
                 videoDiv.innerHTML = "";
-               
+
                 postModels.$values.forEach((video) => {
 
                     videoDiv.innerHTML += `
@@ -283,6 +288,48 @@ function showVideos() {
                 alert('Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
             }
         });
+    }
+    else if (currentUrl.toLowerCase() == "/home/myprofile") {
+        const myUserId = document.getElementById("myUserId");
+
+        $.ajax({
+            url: `/Post/MyFriendVideoPosts/${myUserId.innerHTML}`,
+            type: 'GET',
+            success: function (postModels) {
+
+                const profileVideosDiv = document.getElementById("profileVideosDiv");
+
+                profileVideosDiv.innerHTML = "";
+
+                postModels.$values.forEach((video) => {
+
+                    profileVideosDiv.innerHTML += `
+
+                      <div class="video-item" style="position: relative; display: inline-block;">
+
+                            <iframe class="embed-responsive-item"
+                                style="width: 150px; height: 150px;"
+                                src="${video.videoLink.includes('youtu.be') ? video.videoLink.replace('youtu.be/', 'youtube.com/embed/') : video.videoLink.replace('watch?v=', 'embed/')}" 
+                                frameborder="0" allowfullscreen>
+                            </iframe>
+
+                            <a href="${video.videoLink}" class="video-btn popup-youtube" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                <i class="ri-play-fill" style="font-size: 30px; color: white; background-color: rgba(0, 0, 0, 0.5); border-radius: 50%; padding: 10px;"></i>
+                            </a>
+                       </div>
+
+
+                    `;
+
+
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                alert('Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
+            }
+        });
+
     }
 }
 
@@ -2633,6 +2680,7 @@ function editProfileImage(event) {
             success: function (response) {
                 console.log('Changeed Background Image:', response);
                 InvokeProfileRaflashStart(myUserId.innerHTML);
+                InvokeContactReflashStart();
 
             },
             error: function (xhr, status, error) {
@@ -2643,6 +2691,189 @@ function editProfileImage(event) {
 }
 
 // Profile End
+
+
+
+// Setting Start
+
+function showSettingAll() {
+    $.ajax({
+        type: 'GET',
+        url: '/User/SettingAllData', 
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            const userSettings = response;
+
+            console.dir(userSettings);
+
+            document.getElementById("FirstNameSettingValue").value = userSettings.firstName || '';
+            document.getElementById("LastNameSettingValue").value = userSettings.lastName || '';
+            document.getElementById("EmailSettingValue").value = userSettings.email || '';
+            document.getElementById("BackupEmailSettingValue").value = userSettings.backupEmail || '';
+            document.getElementById("DateOfBirthSettingValue").value = userSettings.dateOfBirth ? new Date(userSettings.dateOfBirth).toISOString().split('T')[0] : '';
+            document.getElementById("PhoneNoSettingValue").value = userSettings.phoneNo || '';
+            document.getElementById("OccupationSettingValue").value = userSettings.occupation || '';
+            document.getElementById("GenderSettingValue").value = userSettings.gender || '';
+            document.getElementById("RelationStatusSettingValue").value = userSettings.relationStatus || '';
+            document.getElementById("BloodGroupSettingValue").value = userSettings.bloodGroup || '';
+            document.getElementById("WebsiteSettingValue").value = userSettings.website || '';
+            document.getElementById("LanguageSettingValue").value = userSettings.language || '';
+            document.getElementById("AddressSettingValue").value = userSettings.address || '';
+            document.getElementById("CitySettingValue").value = userSettings.city || '';
+            document.getElementById("StateSettingValue").value = userSettings.state || '';
+            document.getElementById("CountrySettingValue").value = userSettings.country || '';
+
+
+            document.getElementById("UserNameSettingInput").value = userSettings.userName || '';
+            document.getElementById("PhoneNumberSettingInput").value = userSettings.phoneNo || ''; 
+            document.getElementById("CountryMainSettingInput").value = userSettings.country || '';
+            document.getElementById("AccountEmailSettingInput").value = userSettings.Email || '';
+
+
+
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching user settings:', error);
+        }
+    });
+}
+
+function updateSettingAllEvent(event) {
+    event.preventDefault();
+
+    const userSettingsModel = {
+        FirstName: document.getElementById("FirstNameSettingValue").value,
+        LastName: document.getElementById("LastNameSettingValue").value,
+        Email: document.getElementById("EmailSettingValue").value,
+        BackupEmail: document.getElementById("BackupEmailSettingValue").value,
+        DateOfBirth: document.getElementById("DateOfBirthSettingValue").value,
+        PhoneNo: document.getElementById("PhoneNoSettingValue").value,
+        Occupation: document.getElementById("OccupationSettingValue").value,
+        Gender: document.getElementById("GenderSettingValue").value,
+        RelationStatus: document.getElementById("RelationStatusSettingValue").value,
+        BloodGroup: document.getElementById("BloodGroupSettingValue").value,
+        Website: document.getElementById("WebsiteSettingValue").value,
+        Language: document.getElementById("LanguageSettingValue").value,
+        Address: document.getElementById("AddressSettingValue").value,
+        City: document.getElementById("CitySettingValue").value,
+        State: document.getElementById("StateSettingValue").value,
+        Country: document.getElementById("CountrySettingValue").value,
+    };
+
+    console.dir(userSettingsModel);
+
+    fetch('/User/UpdateSetting', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userSettingsModel),
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const userFullName = document.getElementById("userFullName");
+            const userEmail = document.getElementById("userEmail");
+
+            userFullName.innerHTML = document.getElementById("FirstNameSettingValue").value + " " + document.getElementById("LastNameSettingValue").value;
+            userEmail.innerHTML = document.getElementById("EmailSettingValue").value;
+            InvokeContactReflashStart();
+            console.log('User settings updated:', data);
+        })
+        .catch(error => {
+            console.error('Error updating user settings:', error);
+            alert('Failed to update settings: ' + error.message);
+        });
+}
+
+
+
+
+
+function updateSettingMainEvent(event) {
+    event.preventDefault();
+
+   
+
+    const userNameSettingValue = document.getElementById("UserNameSettingInput").value;
+    const emailSettingValue = document.getElementById("AccountEmailSettingInput").value;
+    const phoneNoSettingValue = document.getElementById("PhoneNumberSettingInput").value;
+    const countrySettingValue = document.getElementById("CountryMainSettingInput").value;
+
+    const userSettingMainModel = {
+        UserName: userNameSettingValue,
+        Email: emailSettingValue,
+        PhoneNo: phoneNoSettingValue,
+        Country: countrySettingValue,
+    };
+
+    fetch('/User/UpdateMain', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userSettingMainModel),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const userName = document.getElementById("userName");
+
+            userName.innerHTML = document.getElementById("UserNameSettingInput").value;
+
+            console.log('User updated successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error updating user:', error);
+        });
+}
+
+function updateSettingPasswordEvent(event) {
+    event.preventDefault();
+
+    const passwordModel = {
+        CurrentPasswordFirst: document.getElementById("CurrentPasswordSettingInput").value,
+        CurrentPasswordSecond: document.getElementById("ConfirmPasswordSettingInput").value,
+        NewPassword: document.getElementById("NewPasswordSettingInput").value
+    };
+
+    console.dir(passwordModel);
+
+    if (!passwordModel.CurrentPasswordFirst || !passwordModel.CurrentPasswordSecond || !passwordModel.NewPassword) {
+        alert("Please fill in all the required fields.");
+        return;
+    }
+
+    fetch('/User/UpdatePassword', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(passwordModel),
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+        })
+        .catch(error => {
+        });
+}
+
+// Setting End
 
 
 

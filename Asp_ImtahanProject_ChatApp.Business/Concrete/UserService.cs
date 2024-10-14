@@ -13,10 +13,12 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
     public class UserService :IUserService
     {
         private readonly IUserDal _userDal;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(IUserDal userDal)
+        public UserService(IUserDal userDal, UserManager<User> userManager)
         {
             _userDal = userDal;
+            _userManager = userManager;
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
@@ -27,6 +29,17 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         public async Task UpdateAsync(User user)
         {
             await _userDal.UpdateAsync(user);
+        }
+        public async Task<bool> VerifyPasswordAsync(User user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+        public async Task<bool> ChangePasswordAsync(User user, string newPassword)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            return result.Succeeded;
         }
     }
 }

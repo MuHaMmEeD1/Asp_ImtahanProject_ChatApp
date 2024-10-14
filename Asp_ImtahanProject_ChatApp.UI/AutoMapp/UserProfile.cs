@@ -15,9 +15,12 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
 
 
             CreateMap<User, UserProfileModel>();
-               
 
-            CreateMap<User, UserSetlingsModel>().ReverseMap();
+
+            CreateMap<User, UserSetlingsModel>()
+                .ForMember(usm=>usm.DateOfBirth, u=>u.MapFrom(mp=>mp.DateOfBirth.ToString()));
+            CreateMap<User, UserSettingMainModel>();
+            CreateMap<User, UserSettingPasswordModel>();
 
 
         }
