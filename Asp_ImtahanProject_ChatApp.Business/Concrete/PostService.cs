@@ -50,9 +50,21 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
            
             return await _userFriendService.GetUserFriendsPostsListAsync(userId);
 
+        
+        } 
+        
+        public async Task<List<Post>> GetMyPostsAsync(string userId, string TagName = null)
+        {
+           if(TagName == null)
+            {
+            return await _postDal.GetListAsync(p=>p.UserId == userId);
+
+            }
+            return await _postDal.GetListAsync(p => p.UserId == userId && p.PostTags.Any(pt => pt.Tag.Name == TagName));
+
         }
 
-        public async Task<IEnumerable<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null)
+        public async Task<List<Post>> GetIncludeListAsync(Expression<Func<Post, bool>> filter = null)
         {
             return await _postDal.GetIncludeListAsync(filter);
         }
@@ -61,6 +73,19 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         {
             await _postDal.UpdateAsync(post);
         }
+
+        public async Task<List<Post>> GetMyFriendVideoPostAsync(string userId)
+        {
+            var friendPosts = await _userFriendService.GetUserFriendsPostsListAsync(userId) ?? new List<Post>();
+
+           
+            return friendPosts
+                .Where(p => p.VideoLink != null)
+                .OrderByDescending(p => p.DateTime) 
+                .Take(3) 
+                .ToList();
+        }
+
     }
 
 }

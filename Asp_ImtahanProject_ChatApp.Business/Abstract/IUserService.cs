@@ -11,5 +11,6 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
     {
         Task<User> GetUserByIdAsync(string userId);
         Task UpdateAsync(User user);
+        
     }
 }

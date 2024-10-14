@@ -12,6 +12,7 @@ namespace Asp_ImtahanProject_ChatApp.Business.Abstract
 
         Task AddAsync(Message message);
         Task<List<Message>> GetUserIdMessagesAsync(string userId, string otherUserId);
+        Task<List<Message>> GetUserIdMessagesHeaderAsync(string userId);
         Task UpdateAsync(Message message);
         Task<Message> GetByIdAsync(int id);
  

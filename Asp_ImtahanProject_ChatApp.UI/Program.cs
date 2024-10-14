@@ -28,6 +28,7 @@ builder.Services.AddAutoMapper(typeof(LikeProfile));
 builder.Services.AddAutoMapper(typeof(FriendshipRequestProfile));
 builder.Services.AddAutoMapper(typeof(UserFriendProfile));
 builder.Services.AddAutoMapper(typeof(MessageProfile));
+builder.Services.AddAutoMapper(typeof(UserProfile));
 
 
 // Data Access Layer (DAL) Configuration

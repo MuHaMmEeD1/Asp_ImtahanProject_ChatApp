@@ -40,6 +40,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
 
                 .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes.Count))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToString("yyyy-MM-dd HH:mm")));
+
+            CreateMap<Post, PostVideoModel>();
         }
     }
 

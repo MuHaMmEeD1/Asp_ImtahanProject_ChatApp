@@ -26,21 +26,30 @@ connection.on("OnConnectedMethod", (name, imageUrl, fullName, Email, id) => {
 
     var currentUrl = window.location.pathname;
 
+    console.log("OnConnectedMethod OK");
+
     if (currentUrl.toLowerCase() == "/home/notifications") {
         showNotificationsFunction();
     }
     else if (currentUrl.toLowerCase() == "/home/index") {
         defaultFriendPostsMethod();
+        indexShowProfile();
     }
     else if (currentUrl.toLowerCase() == "/home/friends") {
         showFriendsMethod();
     }
     else if (currentUrl.toLowerCase() == "/home/messages") {
         showUserFriendMessage();
+    } else if (currentUrl.toLowerCase() == "/home/myprofile") {
+
+        console.log("/home/myprofile Ok");
+        showMainProfileDiv();
+        showProfilePosts();
     }
-
+    showContacts()
+    showVideos();
     showHeaderUnansweredFriendshipRequest();
-
+    InvokeContactReflashStart();
     
 });
 
@@ -59,6 +68,7 @@ connection.on("HeaderReflash", (userId) => {
 
         showHeaderUnansweredFriendshipRequest();
         showHeaderFriendshipRequest();
+        showMessageHeader();
 
 
         if (currentUrl == "/Home/Notifications") {
@@ -70,18 +80,23 @@ connection.on("HeaderReflash", (userId) => {
 
 connection.on("PostUlReflashStart", (tagName) => {
 
-
     const searchInputValue = document.getElementById("searchInputValue");
 
-    if (searchInputValue.innerHTML == tagName) {
-        searchPostIsTagMethod();
-    }
-    else if (searchInputValue.innerHTML == "") {
-        defaultFriendPostsMethod();
+    var currentUrl = window.location.pathname;
 
+    if (currentUrl.toLowerCase() == "/home/index") {
+        if (searchInputValue.innerHTML == tagName) {
+            searchPostIsTagMethod();
+        }
+        else if (searchInputValue.innerHTML == "") {
+            defaultFriendPostsMethod();
+        }
     }
-
+    else if (currentUrl.toLowerCase() == "/home/myprofile") { 
+        showProfilePosts();
+    }
 });
+
 
 connection.on("PostUlReflash_ID_Start", (userId) => {
 
@@ -121,15 +136,60 @@ connection.on("MessageReflash", (userId, otherUserId, otherProfileUrl, otherUser
     var currentUrl = window.location.pathname;
     const myUserId = document.getElementById("myUserId");
 
+
     if (currentUrl.toLowerCase() == "/home/messages") {
 
         if (myUserId.innerHTML == userId) {
 
             showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName);
+
+            $.ajax({
+                url: '/Message/HeaderMessages',
+                type: 'GET',
+                contentType: "application/json",
+
+                success: function (data) {
+                    const myUserId = document.getElementById("myUserId");
+
+                    data.$values.forEach((message) => {
+                        updateMessageHeader(message.id);
+                    });
+                    InvokeHeaderReflash(myUserId.innerHTML);
+                    messageHeaderDivCount.innerHTML = 0;
+                    messageHeaderDivCount.style.display = "none";
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Hatası:', status, error);
+                }
+            });
         }
     }
 
 })
+
+connection.on("ProfileReflash", (userId) => {
+    var currentUrl = window.location.pathname;
+    const myUserId = document.getElementById("myUserId");
+
+    if (myUserId.innerHTML == userId && currentUrl.toLowerCase() == "/home/myprofile") {
+        console.log("/home/myprofile Ok");
+        showMainProfileDiv();
+        showProfilePosts();
+    }
+    else if (myUserId.innerHTML == userId && currentUrl.toLowerCase() == "/home/index") {
+
+        indexShowProfile();
+
+    }
+
+
+})
+
+connection.on("ContactReflash", () => {
+    showContacts();
+    showOnlineContacts();
+});
 
 async function InvokePostUlReflash() {
     const searchInput = document.getElementById("searchInput");
@@ -152,6 +212,16 @@ async function InvokeFriendsReflashStart(userId) {
 async function InvokeMessageReflashStart(userId, otherUserId, otherProfileUrl, otherUserName) {
     await connection.invoke("MessageReflash", userId, otherUserId, otherProfileUrl, otherUserName);
 }
+
+async function InvokeProfileRaflashStart(userId) {
+    await connection.invoke("ProfileReflash", userId);
+}
+
+async function InvokeContactReflashStart() {
+    await connection.invoke("ContactReflash");
+
+}
+
 // Hub End
 
 
@@ -170,12 +240,218 @@ function updateLabel(input) {
     }
 }
 
+function showVideos() {
+    var currentUrl = window.location.pathname;
+
+    if (currentUrl.toLowerCase() == "/home/index") {
+        const myUserId = document.getElementById("myUserId");
+
+        $.ajax({
+            url: `/Post/MyFriendVideoPosts/${myUserId.innerHTML}`, 
+            type: 'GET',
+            success: function (postModels) {
+
+                const videoDiv = document.getElementById("videoDiv");
+
+                videoDiv.innerHTML = "";
+               
+                postModels.$values.forEach((video) => {
+
+                    videoDiv.innerHTML += `
+
+                      <div class="video-item" style="position: relative; display: inline-block;">
+
+                            <iframe class="embed-responsive-item"
+                                style="width: 150px; height: 150px;"
+                                src="${video.videoLink.includes('youtu.be') ? video.videoLink.replace('youtu.be/', 'youtube.com/embed/') : video.videoLink.replace('watch?v=', 'embed/')}" 
+                                frameborder="0" allowfullscreen>
+                            </iframe>
+
+                            <a href="${video.videoLink}" class="video-btn popup-youtube" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                <i class="ri-play-fill" style="font-size: 30px; color: white; background-color: rgba(0, 0, 0, 0.5); border-radius: 50%; padding: 10px;"></i>
+                            </a>
+                       </div>
+
+
+                    `;
+
+
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                alert('Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
+            }
+        });
+    }
+}
+
+
+function searchContactsEvent(event) {
+
+    event.preventDefault();
+
+    const searchContactsInput = document.getElementById("searchContactsInput");
+    const searchContactsInputValue = document.getElementById("searchContactsInputValue");
+
+    searchContactsInputValue.innerHTML = searchContactsInput.value;
+    showContacts();
+}
+
+function showContacts() {
+    const myUserId = document.getElementById("myUserId");
+    const conteactsDiv = document.getElementById("conteactsDiv");
+    const searchContactsInputValue = document.getElementById("searchContactsInputValue").innerHTML;
+
+    $.ajax({
+        url: "/UserFriend/FriendsMessages",
+        type: 'GET',
+        data: { UserName: searchContactsInputValue }, 
+        success: function (data) {
+            conteactsDiv.innerHTML = "";
+
+            data.$values.forEach((friend) => {
+                conteactsDiv.innerHTML += `
+                    <div class="contact-item">
+                        <a><img src="${friend.profileImageUrl}" class="rounded-circle" alt="image"></a>
+                        <span class="name"><a>${friend.userName}</a></span>
+                        <span class="${friend.isOnline ? `status-online` : `status-offline`}" style="width: 15px; height: 15px; display: inline-block; border-radius: 50%;"></span>
+                    </div>
+                `;
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+        }
+    });
+}
+
+
+function showOnlineContacts() {
+
+    const myUserId = document.getElementById("myUserId");
+
+    const onlineConteactsDiv = document.getElementById("onlineConteactsDiv");
+   
+
+    $.ajax({
+        url: "/UserFriend/RecentFriendsMessages",
+        type: 'GET',
+        success: function (data) {
+
+            onlineConteactsDiv.innerHTML = "";
+
+
+            data.$values.forEach((friend) => {
+
+                onlineConteactsDiv.innerHTML += `
+
+
+                    <div class="contact-item" style="position: relative;">
+                    <a >
+                        <img src="${friend.profileImageUrl}" class="rounded-circle" alt="image" style="width: 40px; height: 40px; object-fit: cover;">
+                    </a>
+    
+                    <span class="name"><a>${friend.userName}</a></span>
+    
+                    <span class="status-online" style="width: 17px; height: 17px; display: inline-block; border-radius: 50%; background-color: #1dd217; position: absolute; top: 0; left: 30px; border: 2px solid white;"></span>
+                </div>
+
+
+
+                `;
+
+
+            });
+         
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+        }
+    });
+
+}
 
 
 // Addition Functions Start
 
 
 // HomeIndex Start
+
+function indexShowProfile() {
+
+    const myUserId = document.getElementById("myUserId");
+    const indexProfileAsideDiv = document.getElementById("indexProfileAsideDiv");
+
+    $.ajax({
+        url: '/User/ProfileUser',
+        type: 'GET',
+        success: function (userProfile) {
+            console.dir("Profile Data");
+            console.dir(userProfile);
+
+            indexProfileAsideDiv.innerHTML = "";
+
+            indexProfileAsideDiv.innerHTML +=
+                `
+
+                          <div class="card shadow-sm mb-3">
+
+                               <div class="w-100" style="background-image: url('${userProfile.backgroundImageUrl}'); background-size: cover; background-position: center; height: 120px; border-radius: 10px 10px 0 0;">
+                                 </div>
+
+                              <div class="card-body">
+                                <div class="profile-box d-flex align-items-center">
+                                  <a href="#">
+                                    <img src="${userProfile.profileImageUrl}" class="rounded-circle" alt="image" style="width: 160px; height: 160px; object-fit: cover;">
+                                  </a>
+                                  <div class="text ms-3">
+                                    <h5 class="card-title mb-0">
+                                      <a href="#" class="text-dark">${userProfile.firstName} ${userProfile.lastName}</a>
+                                    </h5>
+                                    <p class="text-muted">${userProfile.email}</p>
+                                  </div>
+                                </div>
+
+                                <ul class="list-inline mt-3 mb-4 text-center">
+                                  <li class="list-inline-item">
+                                    <a href="#" class="text-dark">
+                                      <span class="item-number h4 d-block">${userProfile.likeCount}</span>
+                                      <span class="item-text">Likes</span>
+                                    </a>
+                                  </li>
+                                  <li class="list-inline-item ms-4">
+                                    <a href="#" class="text-dark">
+                                      <span class="item-number h4 d-block">${userProfile.friendCount}</span>
+                                      <span class="item-text">Friends</span>
+                                    </a>
+                                  </li>
+                                </ul>
+
+                                <div class="text-center">
+                                  <a href="/Home/MyProfile" class="btn btn-primary btn-sm">View Profile</a>
+                                </div>
+                              </div>
+                        </div>
+
+
+                      
+
+
+                `;
+
+          
+
+
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+        }
+    });
+}
+
+
+
 function searchPostIsTag(event) {
     event.preventDefault();
 
@@ -190,10 +466,13 @@ function searchPostIsTag(event) {
 
         searchPostIsTagMethod();
     }
+    else if (currentUrl.toLocaleLowerCase() == "/home/myprofile") {
+
+        showProfilePosts();
+
+    }
   
 }
-
-//FriendsPosts
 
 function searchPostIsTagMethod() {
 
@@ -621,6 +900,8 @@ function likePostFunction(event, index, postId, userLikeId) {
             success: function () {
                 console.log("Like added successfully");
                 InvokePostUlReflash();
+                InvokeProfileRaflashStart(myUserId.innerHTML);
+
             },
             error: function (xhr, status, error) {
                 console.error("Error: " + error);
@@ -640,6 +921,7 @@ function likePostFunction(event, index, postId, userLikeId) {
             }),
             success: function () {
                 InvokePostUlReflash();
+                InvokeProfileRaflashStart(myUserId.innerHTML);
             },
             error: function () { }
         });
@@ -736,7 +1018,7 @@ function addCommentFunction(event, index, postId) {
         if (replyCommetnId.innerHTML.trim() !== "") {
 
             $.ajax({
-                url: 'ReplyToComment/Add',
+                url: '/ReplyToComment/Add',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -754,6 +1036,7 @@ function addCommentFunction(event, index, postId) {
 
 
                     InvokePostUlReflash();
+                    InvokeProfileRaflashStart(myUserId.innerHTML);
 
                 },
                 error: function (xhr, status, error) {
@@ -1120,6 +1403,8 @@ function addFriendNotificationsEvent(event, index, otherUserId, frId) {
             InvokeHeaderReflash(otherUserId);
             InvokePostUlReflash();
             InvokePostUlReflash_ID_Start(otherUserId);
+            InvokeContactReflashStart();
+
 
 
         },
@@ -1474,6 +1759,8 @@ function deleteFriendInFriends(event, outherUserId) {
             InvokePostUlReflash_ID_Start(outherUserId);
             InvokeFriendsReflashStart(outherUserId);
             InvokeFriendsReflashStart(myUserId.innerHTML);
+            InvokeContactReflashStart();
+
 
         },
         error: function (xhr, status, error) {
@@ -1574,14 +1861,41 @@ function enterFriendMessageChatEvent(event, otherUserId, otherProfileUrl, otherU
     pOtherUserMessageProfileImage.src = otherProfileUrl;
     pOtherUserMessageUserName.innerHTML = otherUserName;
 
+
+    $.ajax({
+        url: '/Message/HeaderMessages',
+        type: 'GET',
+        contentType: "application/json",
+
+        success: function (data) {
+            const myUserId = document.getElementById("myUserId");
+
+            data.$values.forEach((message) => {
+                updateMessageHeader(message.id);
+            });
+            InvokeHeaderReflash(myUserId.innerHTML);
+            messageHeaderDivCount.innerHTML = 0;
+            messageHeaderDivCount.style.display = "none";
+
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Hatası:', status, error);
+        }
+    });
+
+
     showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName);
+
+
+
 
 }
 
 function showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName) {
     const userFriendMessageDiv = document.getElementById("userFriendMessageDiv");
     const myUserId = document.getElementById("myUserId");
-
+    const messageHeaderDivCount = document.getElementById("messageHeaderDivCount");
+   
     const userProfileImage = document.getElementById("userProfileImage");
     const userFullName = document.getElementById("userFullName");
 
@@ -1595,6 +1909,9 @@ function showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName) {
         data: JSON.stringify(model),
         success: function (data) {
             userFriendMessageDiv.innerHTML = '';  
+
+            console.dir("bu du")
+            console.dir(data.$values);
 
             data.$values.forEach((message) => {
                 userFriendMessageDiv.innerHTML += `
@@ -1625,6 +1942,9 @@ function showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName) {
                    
                 `;
             });
+
+
+           
         },
         error: function (xhr, status, error) {
             console.error('AJAX Error:', status, error);
@@ -1669,6 +1989,8 @@ function addMessageEvent(event) {
 
                 InvokeMessageReflashStart(myUserId, recipientUserId, pOtherUserMessageProfileImage.src, pOtherUserMessageUserName.innerHTML);
                 InvokeMessageReflashStart(recipientUserId, myUserId, userProfileImage.src, userName.innerHTML);
+                InvokeHeaderReflash(myUserId);
+                InvokeHeaderReflash(recipientUserId);
             },
             error: function (xhr, status, error) {
                 console.error('AJAX Hatası:', status, error);
@@ -1684,11 +2006,643 @@ function addMessageEvent(event) {
 
 
 
+
+function showMessageHeader() {
+    const messageHeaderDiv = document.getElementById("messageHeaderDiv");
+    const messageHeaderDivCount = document.getElementById("messageHeaderDivCount");
+    const myUserId = document.getElementById("myUserId"); 
+   
+
+   
+
+    $.ajax({
+        url: '/Message/HeaderMessages', 
+        type: 'GET',
+        contentType: "application/json", 
+      
+        success: function (data) {
+            messageHeaderDiv.innerHTML = '';
+            messageHeaderDivCount.innerHTML = data.$values.length; 
+
+            if (data.$values.length > 0) {
+
+                messageHeaderDivCount.style.display = "block";
+
+
+
+                data.$values.forEach((message) => {
+                    messageHeaderDiv.innerHTML += `
+                     <div class="item d-flex justify-content-between align-items-center">
+                        <div class="figure">
+                            <a ><img src="${message.userProfileUrl}" class="rounded-circle" alt="image"></a>
+                        </div>
+                        <div class="text">
+                            <h4><a >${message.userName}</a></h4>
+                            <span>${message.messageStr}</span>
+                        </div>
+                    </div>
+                `;
+                });
+            }
+            else {
+                messageHeaderDivCount.style.display = "none";
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Hatası:', status, error);
+        }
+    });
+}
+
+function updateMessageHeader(messageId) {
+    const myUserId = document.getElementById("myUserId");
+
+  
+    const model = {
+        Id: messageId 
+    };
+
+    $.ajax({
+        url: `/Message/Update`, 
+        type: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(model), 
+        success: function () {
+            console.log(`Message with ID ${messageId} marked as seen.`);
+            InvokeHeaderReflash(myUserId.innerHTML); 
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Hatası:', status, error); 
+        }
+    });
+}
+
+
+function messagesClickEvent(event) {
+
+    event.preventDefault();
+
+    const messageHeaderDivCount = document.getElementById("messageHeaderDivCount");
+    const myUserId = document.getElementById("myUserId"); 
+
+    $.ajax({
+        url: '/Message/HeaderMessages',
+        type: 'GET',
+        contentType: "application/json",
+
+        success: function (data) {
+           
+
+            data.$values.forEach((message) => {
+                updateMessageHeader(message.id);
+            });
+                InvokeHeaderReflash(myUserId.innerHTML);
+            messageHeaderDivCount.innerHTML = 0;
+            messageHeaderDivCount.style.display = "none";
+
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Hatası:', status, error);
+        }
+    });
+
+
+}
+
+
 // Message End
 
 
 
+// Profile Start
 
+
+function showProfilePosts() {
+    const profilePostsDiv = document.getElementById("profilePostsDiv");
+    const myUserId = document.getElementById("myUserId");
+    const searchInputValue = document.getElementById("searchInputValue");
+
+
+
+    console.log("showProfile OK");
+
+
+    if (searchInputValue.innerHTML == "") {
+
+
+        $.ajax({
+            url: `/Post/MyPosts/${myUserId.innerHTML}`,
+            type: 'GET',
+            success: function (posts) {
+                profilePostsDiv.innerHTML = '';
+                console.dir(posts.$values);
+
+                if (posts.$values.length === 0) {
+                    console.log("0 element");
+                    profilePostsDiv.innerHTML = '<li>No posts found.</li>';
+                    return;
+                }
+                else {
+                    profilePostsDiv.innerHTML = '';
+
+                    posts.$values.forEach((post, index) => {
+                        const listItem = document.createElement('li');
+                        let itIsMyPost = myUserId.innerHTML == post.userId;
+
+                        let userLikeId = -1;
+
+                        post.likes.$values.forEach((like) => {
+
+                            if (like.userId == myUserId.innerHTML) {
+                                userLikeId = like.id;
+                            }
+
+
+                        });
+
+
+                        listItem.innerHTML = `
+                                <div class="news-feed news-feed-post" style="margin-bottom: 30px;">
+                                    <div class="post-header d-flex justify-content-between align-items-center">
+                                        <div class="image">
+                                            <a href="my-profile.html"><img src="${post.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
+                                        </div>
+                                        <div class="info ms-3">
+                                            <span class="name"><a href="my-profile.html">${post.userName}</a></span>
+                                            <span class="small-text"><a href="#">${post.dateTime}</a></span>
+                                        </div>
+                                        <div class="dropdown">
+                                            ${itIsMyPost ? '' : `
+                                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="flaticon-menu"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item btn btn-success d-flex align-items-center" onclick="addFriendshipRequest(event, '${post.userId}', ${index})">
+                                                        <i class="flaticon-edit"></i>
+                                                        <span id="addFriendP${index}" style="margin-left: 8px;">Add Friend</span>
+                                                        <p style="display: none" id = "addFriendPNumber${index}" ></p>
+                                                    </a>
+                                                </li>
+                                            </ul>`}
+                                        </div>
+                                    </div>
+                                    <div class="post-body">
+                                        <p>${post.text}</p>
+                                        <div class="post-image">
+                                            ${post.imageUrl ? `<img src="${post.imageUrl}" alt="image" style="width: 100%; height: auto; object-fit: contain;">` : ''}
+                                        </div>
+                                        ${post.videoLink ? `
+                                        <div class="embed-responsive" style="width: 100%; max-width: 1000px; height: 400px; margin: 0 auto;">
+                                            <iframe class="embed-responsive-item" 
+                                                style="width: 100%; height: 100%;"
+                                                src="${post.videoLink.includes('youtu.be') ? post.videoLink.replace('youtu.be/', 'youtube.com/embed/') : post.videoLink.replace('watch?v=', 'embed/')}" 
+                                                frameborder="0" allowfullscreen>
+                                            </iframe>
+                                        </div>` : ''}
+                                        <ul class="post-meta-wrap d-flex justify-content-between align-items-center">
+                                            <li class="post-react">
+                                                <a id="likePostButton${index}" 
+                                                   class="btn d-flex align-items-center border-0 text-decoration-none"
+                                                   onclick="likePostFunction(event, ${index}, ${post.postId}, ${userLikeId})">
+                                                    <i id="likePostStyle${index}" 
+                                                       class="fas fa-thumbs-up fa-3x" 
+                                                       style="color: ${userLikeId > -1 ? 'blue' : 'darkgray'}; font-size: 30px;" 
+                                                       title="${userLikeId > -1 ? 'Liked' : 'Like'}"></i>
+                                                    <span class="number ml-2">${post.likes.$values.length}</span>
+                                                </a>
+                                            </li>
+                                            <li class="post-comment" onclick="openCloseComments(event, ${index})">
+                                                <a><i class="flaticon-comment"></i>
+                                                <span>Comment</span> <span class="number">${post.comments.$values.length}</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div id="commentDiv${index}" class="post-comment-list" style="display: block;"></div>
+                                        <form class="post-footer">
+                                            <div class="footer-image">
+                                                <a href="#"><img src="${userProfileImage.src}" class="rounded-circle" alt="image"></a>
+                                            </div>
+                                            <div class="form-group d-flex align-items-center">
+                                                <p id="replyCommetnId${index}" style="display: none;"></p>
+                                                <textarea id="addCommentInput${index}" name="message" class="form-control me-2" placeholder="Write a comment..."></textarea>
+                                                <button type="button" class="btn btn-primary" onclick="addCommentFunction(event, ${index}, ${post.postId})">Add Comment</button>
+                                                <button id="declineReplyButton${index}" style="display: none;" type="button" class="btn btn-primary ms-2" onclick="declineReplyFunction(event, ${index})">Decline Reply</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            `;
+
+
+
+
+
+                        profilePostsDiv.appendChild(listItem);
+
+
+
+                        const commentDiv = document.getElementById(`commentDiv${index}`);
+                        commentDiv.innerHTML = "";
+
+                        if (!itIsMyPost) {
+
+                            myFriendCheckFunction(index, post.userId);
+                        }
+
+
+                        post.comments.$values.forEach((comment, commentIndex) => {
+
+                            console.log(commentIndex + " Comment");
+
+                            commentDiv.innerHTML += `
+                            <div class="comment-list">
+                                <div class="comment-image">
+                                    <a ><img src="${comment.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
+                                </div>
+                                <div class="comment-info">
+                                    <h3>
+                                        <h4>${comment.userName}</h4>
+                                    </h3>
+                                    <span>${comment.dateTime}</span>
+                                    <p>${comment.text}</p>
+
+                                    <ul class="comment-react">
+                                        <li><a onclick="replyButtonFunction( event , ${index} , '${comment.id}', '${comment.userName}' )">Reply</a></li> 
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="replyToCommentDiv${commentIndex}" style="display: block;"   class="more-comments"></div>
+
+                            <div class="more-comments" style="margin-bottom: 20px;">
+                              <a onclick='openCloseReplyToComment(event, ${commentIndex})'>More Comments+</a>
+
+                            </div> 
+                        `;
+
+
+                            const replyToCommentDiv = document.getElementById(`replyToCommentDiv${commentIndex}`);
+                            replyToCommentDiv.innerHTML = "";
+
+                            comment.replyToComments.$values.forEach((rtc) => {
+
+
+                                replyToCommentDiv.innerHTML += `
+                             <div class="comment-list" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding-top: 30px; position: relative; left: 50px;">
+
+                               
+                                 <div class="comment-info" style="flex-grow: 1; text-align: left;">
+                                     <h4 style="margin: 0; font-size: 16px;">${rtc.userName}</h4>
+                                     <span style="font-size: 13px; color: #777;">${rtc.dateTime}</span>
+                                     <p style="font-size: 14px;">${rtc.text}</p>
+                                 </div>
+     
+                                 <div class="comment-image" style="margin-left: 10px; margin-top: 30px">
+                                     <a><img src="${rtc.userProfileImageUrl}" class="rounded-circle" alt="image" style="width: 50px; height: 50px;"></a>
+                                 </div>
+                             </div>
+                            `;
+
+
+
+
+                            });
+
+                        })
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('alax errore');
+                console.error("Error fetching posts:", status, error);
+            }
+        });
+    }
+    else {
+
+        $.ajax({
+            url: '/Post/MySearchPosts',
+            type: 'GET',
+            data: { userId: myUserId.innerHTML, TagName: searchInputValue.innerHTML },
+            success: function (posts) {
+                profilePostsDiv.innerHTML = '';
+                console.dir(posts.$values);
+
+                if (posts.$values.length === 0) {
+                    console.log("0 element");
+                    profilePostsDiv.innerHTML = '<li>No posts found.</li>';
+                    return;
+                }
+                else {
+                    profilePostsDiv.innerHTML = '';
+
+                    posts.$values.forEach((post, index) => {
+                        const listItem = document.createElement('li');
+                        let itIsMyPost = myUserId.innerHTML == post.userId;
+
+                        let userLikeId = -1;
+
+                        post.likes.$values.forEach((like) => {
+
+                            if (like.userId == myUserId.innerHTML) {
+                                userLikeId = like.id;
+                            }
+
+
+                        });
+
+
+                        listItem.innerHTML = `
+                                <div class="news-feed news-feed-post" style="margin-bottom: 30px;">
+                                    <div class="post-header d-flex justify-content-between align-items-center">
+                                        <div class="image">
+                                            <a href="my-profile.html"><img src="${post.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
+                                        </div>
+                                        <div class="info ms-3">
+                                            <span class="name"><a href="my-profile.html">${post.userName}</a></span>
+                                            <span class="small-text"><a href="#">${post.dateTime}</a></span>
+                                        </div>
+                                        <div class="dropdown">
+                                            ${itIsMyPost ? '' : `
+                                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="flaticon-menu"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item btn btn-success d-flex align-items-center" onclick="addFriendshipRequest(event, '${post.userId}', ${index})">
+                                                        <i class="flaticon-edit"></i>
+                                                        <span id="addFriendP${index}" style="margin-left: 8px;">Add Friend</span>
+                                                        <p style="display: none" id = "addFriendPNumber${index}" ></p>
+                                                    </a>
+                                                </li>
+                                            </ul>`}
+                                        </div>
+                                    </div>
+                                    <div class="post-body">
+                                        <p>${post.text}</p>
+                                        <div class="post-image">
+                                            ${post.imageUrl ? `<img src="${post.imageUrl}" alt="image" style="width: 100%; height: auto; object-fit: contain;">` : ''}
+                                        </div>
+                                        ${post.videoLink ? `
+                                        <div class="embed-responsive" style="width: 100%; max-width: 1000px; height: 400px; margin: 0 auto;">
+                                            <iframe class="embed-responsive-item" 
+                                                style="width: 100%; height: 100%;"
+                                                src="${post.videoLink.includes('youtu.be') ? post.videoLink.replace('youtu.be/', 'youtube.com/embed/') : post.videoLink.replace('watch?v=', 'embed/')}" 
+                                                frameborder="0" allowfullscreen>
+                                            </iframe>
+                                        </div>` : ''}
+                                        <ul class="post-meta-wrap d-flex justify-content-between align-items-center">
+                                            <li class="post-react">
+                                                <a id="likePostButton${index}" 
+                                                   class="btn d-flex align-items-center border-0 text-decoration-none"
+                                                   onclick="likePostFunction(event, ${index}, ${post.postId}, ${userLikeId})">
+                                                    <i id="likePostStyle${index}" 
+                                                       class="fas fa-thumbs-up fa-3x" 
+                                                       style="color: ${userLikeId > -1 ? 'blue' : 'darkgray'}; font-size: 30px;" 
+                                                       title="${userLikeId > -1 ? 'Liked' : 'Like'}"></i>
+                                                    <span class="number ml-2">${post.likes.$values.length}</span>
+                                                </a>
+                                            </li>
+                                            <li class="post-comment" onclick="openCloseComments(event, ${index})">
+                                                <a><i class="flaticon-comment"></i>
+                                                <span>Comment</span> <span class="number">${post.comments.$values.length}</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div id="commentDiv${index}" class="post-comment-list" style="display: block;"></div>
+                                        <form class="post-footer">
+                                            <div class="footer-image">
+                                                <a href="#"><img src="${userProfileImage.src}" class="rounded-circle" alt="image"></a>
+                                            </div>
+                                            <div class="form-group d-flex align-items-center">
+                                                <p id="replyCommetnId${index}" style="display: none;"></p>
+                                                <textarea id="addCommentInput${index}" name="message" class="form-control me-2" placeholder="Write a comment..."></textarea>
+                                                <button type="button" class="btn btn-primary" onclick="addCommentFunction(event, ${index}, ${post.postId})">Add Comment</button>
+                                                <button id="declineReplyButton${index}" style="display: none;" type="button" class="btn btn-primary ms-2" onclick="declineReplyFunction(event, ${index})">Decline Reply</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            `;
+
+
+
+
+
+                        profilePostsDiv.appendChild(listItem);
+
+
+
+                        const commentDiv = document.getElementById(`commentDiv${index}`);
+                        commentDiv.innerHTML = "";
+
+                        if (!itIsMyPost) {
+
+                            myFriendCheckFunction(index, post.userId);
+                        }
+
+
+                        post.comments.$values.forEach((comment, commentIndex) => {
+
+                            console.log(commentIndex + " Comment");
+
+                            commentDiv.innerHTML += `
+                            <div class="comment-list">
+                                <div class="comment-image">
+                                    <a ><img src="${comment.userProfileImageUrl}" class="rounded-circle" alt="image"></a>
+                                </div>
+                                <div class="comment-info">
+                                    <h3>
+                                        <h4>${comment.userName}</h4>
+                                    </h3>
+                                    <span>${comment.dateTime}</span>
+                                    <p>${comment.text}</p>
+
+                                    <ul class="comment-react">
+                                        <li><a onclick="replyButtonFunction( event , ${index} , '${comment.id}', '${comment.userName}' )">Reply</a></li> 
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="replyToCommentDiv${commentIndex}" style="display: block;"   class="more-comments"></div>
+
+                            <div class="more-comments" style="margin-bottom: 20px;">
+                              <a onclick='openCloseReplyToComment(event, ${commentIndex})'>More Comments+</a>
+
+                            </div> 
+                        `;
+
+
+                            const replyToCommentDiv = document.getElementById(`replyToCommentDiv${commentIndex}`);
+                            replyToCommentDiv.innerHTML = "";
+
+                            comment.replyToComments.$values.forEach((rtc) => {
+
+
+                                replyToCommentDiv.innerHTML += `
+                             <div class="comment-list" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding-top: 30px; position: relative; left: 50px;">
+
+                               
+                                 <div class="comment-info" style="flex-grow: 1; text-align: left;">
+                                     <h4 style="margin: 0; font-size: 16px;">${rtc.userName}</h4>
+                                     <span style="font-size: 13px; color: #777;">${rtc.dateTime}</span>
+                                     <p style="font-size: 14px;">${rtc.text}</p>
+                                 </div>
+     
+                                 <div class="comment-image" style="margin-left: 10px; margin-top: 30px">
+                                     <a><img src="${rtc.userProfileImageUrl}" class="rounded-circle" alt="image" style="width: 50px; height: 50px;"></a>
+                                 </div>
+                             </div>
+                            `;
+
+
+
+
+                            });
+
+                        })
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                mainProfileDiv.innerHTML = '<p>Error loading search posts. Please try again later.</p>';
+            }
+        });
+    }
+}
+
+function showMainProfileDiv() {
+    const mainProfileDiv = document.getElementById("mainProfileDiv");
+
+    console.log("showMainProfileDiv OK");
+
+    $.ajax({
+        url: '/User/ProfileUser',
+        type: 'GET',
+        success: function (userProfile) { 
+            console.dir("Profile Data");
+            console.dir(userProfile);
+
+            mainProfileDiv.innerHTML = `
+   <div class="profile-cover-image" style="width: 100%; height: 300px; overflow: hidden; position: relative; max-width: 100vw; background-image: url('${userProfile.backgroundImageUrl}'); background-size: cover; background-position: center;">
+        <label class="edit-cover-btn btn btn-light" style="position: absolute; bottom: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; padding: 5px 10px; border-radius: 5px;">
+            Edit Cover
+            <input type="file" style="display: none;" accept="image/*" onchange="editBackgroundProfileImage(event)">
+        </label>               
+    </div>
+
+    <div class="profile-info-box" style="max-width: 80vw; margin: auto;">
+        <div class="inner-info-box d-flex justify-content-between align-items-center">
+            <div class="info-image">
+                <a href="#" style="display: inline-block; border-radius: 50%; overflow: hidden;">
+                    <img src="${userProfile.profileImageUrl}" alt="image" style="max-width: 100%; height: auto; border-radius: 50%;">
+                </a>
+
+               <div class="icon" style="background-color: white; border: 1px solid lightgray; border-radius: 50%; padding: 10px 15px; display: inline-block;">
+                <label style="cursor: pointer;">
+                    <input type="file" style="display: none;" accept="image/*" onchange="editProfileImage(event)">
+                    <i class="flaticon-photo-camera" style="font-size: 24px;"></i>
+                </label>
+                </div>
+
+
+            </div>
+
+            <div class="info-text ms-3">
+                <h3><a>${userProfile.firstName} ${userProfile.lastName}</a></h3>
+                <span><a>${userProfile.email}</a></span>
+            </div>
+            <ul class="statistics">
+                <li>
+                    <a>
+                        <span class="item-number">${userProfile.likeCount}</span>
+                        <span class="item-text">Likes</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span class="item-number">${userProfile.friendCount}</span>
+                        <span class="item-text">Friends</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="profile-list-tabs">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="friends-tab" data-bs-toggle="tab" href="/Home/Friends" role="tab" aria-controls="friends">Friends</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+`;
+
+
+        },
+        error: function (xhr, status, error) { 
+            console.error('AJAX Error:', status, error);
+            mainProfileDiv.innerHTML = '<p>Error loading profile information. Please try again later.</p>';
+        }
+    });
+}
+
+
+function editBackgroundProfileImage(event) {
+    const myUserId = document.getElementById("myUserId");
+    const file = event.target.files[0]; 
+
+    if (file) {
+        const formData = new FormData();
+        formData.append('Photo', file); 
+
+        $.ajax({
+            url: '/User/UpdateBackgroundProfileImage', 
+            type: 'POST',
+            data: formData,
+            contentType: false, 
+            processData: false, 
+            success: function (response) {
+                console.log('Changeed Background Image:', response);
+                InvokeProfileRaflashStart(myUserId.innerHTML);
+                
+            },
+            error: function (xhr, status, error) {
+                console.error('Hata:', xhr.responseText);
+            }
+        });
+    }
+}
+
+function editProfileImage(event) {
+    const myUserId = document.getElementById("myUserId");
+    const file = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append('Photo', file);
+
+        $.ajax({
+            url: '/User/UpdateProfileImage',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log('Changeed Background Image:', response);
+                InvokeProfileRaflashStart(myUserId.innerHTML);
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Hata:', xhr.responseText);
+            }
+        });
+    }
+}
+
+// Profile End
 
 
 

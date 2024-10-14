@@ -114,7 +114,7 @@
                                                 </div>
                                          
                                                 <div class="view-all-requests-btn">
-                                                    <a href="friends.html" class="default-btn">View All Requests</a>
+                                                    <a href="/Home/Friends" class="default-btn">View All Requests</a>
                                                 </div>
                                             </div>
                                        
@@ -123,10 +123,10 @@
                             </div>
                             <div class="option-item">
                                 <div class="dropdown messages-nav-item">
-                                    <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a onclick="messagesClickEvent(event)" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div class="messages-btn">
                                             <i class="flaticon-email"></i>
-                                            <span>2</span>
+                                            <span style="display: none;" id="messageHeaderDivCount">0</span>
                                         </div>
                                     </a>
 
@@ -137,18 +137,13 @@
                                         </div>
                                       
                                         <div class="messages-body" data-simplebar>
-                                            <div class="item d-flex justify-content-between align-items-center">
-                                                <div class="figure">
-                                                    <a href="#"><img src="~/assets/images/user/user-11.jpg" class="rounded-circle" alt="image"></a>
-                                                </div>
-                                                <div class="text">
-                                                    <h4><a href="#">James Vanwin</a></h4>
-                                                    <span>Hello Dear I Want Talk To You</span>
-                                                </div>
-                                            </div>
+                                            <div id="messageHeaderDiv"></div>
+
+                                               
+                                            
                                            
                                             <div class="view-all-messages-btn">
-                                                <a href="messages.html" class="default-btn">View All Messages</a>
+                                                <a href="/Home/Messages" class="default-btn">View All Messages</a>
                                             </div>
                                         </div>
                                     </div>
@@ -283,40 +278,11 @@
         <div class="right-sidebar-area" data-simplebar>
             <div class="recent-chat-box">
                 <div class="title">
-                    <h3>Recent Chat</h3>
+                    <h3>IsOnline Contact</h3>
                 </div>
 
-                <div class="chat-body" data-simplebar>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-15.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Stephan Redding</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-16.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Maria Smith</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-17.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Paul Enlow</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-8.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Stephan Redding</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-9.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Maria Smith</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="chat-item">
-                        <a href="#"><img src="~/assets/images/user/user-10.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Paul Enlow</a></span>
-                        <span class="status-offline"></span>
-                    </div>
+                <div id="onlineConteactsDiv" class="chat-body" data-simplebar>
+                   
                 </div>
             </div>
 
@@ -326,81 +292,15 @@
                 </div>
                 <div class="contact-search-box">
                     <form>
-                        <input type="text" class="input-search" placeholder="Search">
-                        <button type="submit"><i class="ri-search-line"></i></button>
+                        <p id="searchContactsInputValue" style="display: none;"></p>
+                        <input id="searchContactsInput" type="text" class="input-search" placeholder="Search">
+                        <button onclick="searchContactsEvent(event)" type="submit"><i class="ri-search-line"></i></button>
                     </form>
                 </div>
-                <div class="contact-body" data-simplebar>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-18.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Karen Williams</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-4.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Mary A. Schwarz</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-20.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Rex Carruth</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-11.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">James Vanwinkle</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-19.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Oscar Thompson</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-12.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Harry Lopez</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-21.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Frank S. Arena</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-16.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Karen Williams</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-2.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Mary A. Schwarz</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-14.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Rex Carruth</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-18.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">James Vanwinkle</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-5.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Oscar Thompson</a></span>
-                        <span class="status-offline"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-6.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Harry Lopez</a></span>
-                        <span class="status-online"></span>
-                    </div>
-                    <div class="contact-item">
-                        <a href="#"><img src="~/assets/images/user/user-7.jpg" class="rounded-circle" alt="image"></a>
-                        <span class="name"><a href="#">Frank S. Arena</a></span>
-                        <span class="status-offline"></span>
-                    </div>
+                <div id ="conteactsDiv" class="contact-body" data-simplebar>
+                   
+                   
+                   
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ using Asp_ImtahanProject_ChatApp.UI.Models.MessageModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
@@ -40,21 +41,24 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
             return Ok(messageModels);
 
-        }  [HttpGet]
-        public async Task<IActionResult> HeaderMessages(MessageGetDataModel model)
+        } 
+        [HttpGet]
+        public async Task<IActionResult> HeaderMessages()
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            List<Message> messages = await _messageService.GetUserIdMessagesAsync(model.UserId, model.OtherUserId);
+
+            List<Message> messages = await _messageService.GetUserIdMessagesHeaderAsync(userId);
             List<MessageHeaderModel> messageModels = _mapper.Map<List<MessageHeaderModel>>(messages);
 
             return Ok(messageModels);
 
         }
 
-        [HttpPost("{messageId}")]
-        public async Task<IActionResult> Update(int messageId)
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] MessageUpdateModel model)
         {
-            Message message = await _messageService.GetByIdAsync(messageId);
+            Message message = await _messageService.GetByIdAsync(model.Id);
             message.Seen = true;
             await _messageService.UpdateAsync(message);
 

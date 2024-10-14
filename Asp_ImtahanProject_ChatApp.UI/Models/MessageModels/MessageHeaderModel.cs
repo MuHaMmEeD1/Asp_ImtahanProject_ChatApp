@@ -3,7 +3,8 @@
     public class MessageHeaderModel
     {
         public int Id { get; set; }
-        public string? userProfileUrl { get; set; }
+        public string? UserProfileUrl { get; set; }
+        public string? UserName { get; set; }
         public bool Seen { get; set; }
         public string? MessageStr { get; set; }
 

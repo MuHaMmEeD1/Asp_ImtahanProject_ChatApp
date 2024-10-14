@@ -41,6 +41,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
             User user = await _userService.GetUserByIdAsync(userIdClaim!);
             user.IsOnline = false;
             await _userService.UpdateAsync(user);
+            await Clients.All.SendAsync("ContactReflash");
         }
 
         public async Task PostUlReflash(string tagName)
@@ -66,7 +67,18 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
         public async Task MessageReflash(string userId, string otherUserId,string otherProfileUrl,string otherUserName)
         {
             await Clients.All.SendAsync("MessageReflash", userId, otherUserId, otherProfileUrl, otherUserName);
-        }
+        } 
              
+        public async Task ProfileReflash(string userId)
+        {
+            await Clients.All.SendAsync("ProfileReflash", userId);
+
+        } 
+        
+        public async Task ContactReflash()
+        {
+            await Clients.All.SendAsync("ContactReflash");
+
+        }
     }
 }

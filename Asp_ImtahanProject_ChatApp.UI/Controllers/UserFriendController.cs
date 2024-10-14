@@ -56,7 +56,7 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<UserFriend> userFriends;
 
-            if (UserName != null)
+            if (UserName != null && UserName != "")
             {
                 userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId, UserName);
             }
@@ -65,11 +65,42 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
                 userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId);
             }
 
+
             var mappUserFriends = _mapper.Map<List<UserFriendMessageModel>>(userFriends, opts =>
             {
                 opts.Items["HttpContextAccessor"] = _httpContextAccessor;
                 opts.Items["UserFriendService"] = _userFriendService;
             });
+
+            mappUserFriends = mappUserFriends.OrderByDescending(f => f.IsOnline).ToList();
+
+
+
+            return Ok(mappUserFriends);
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> RecentFriendsMessages()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<UserFriend> userFriends;
+
+           
+            
+             userFriends = await _userFriendService.GetUserFriendsOrUFFListAsync(userId);
+
+
+            var mappUserFriends = _mapper.Map<List<UserFriendMessageModel>>(userFriends, opts =>
+            {
+                opts.Items["HttpContextAccessor"] = _httpContextAccessor;
+                opts.Items["UserFriendService"] = _userFriendService;
+            });
+
+            mappUserFriends = mappUserFriends.Where(f => f.IsOnline).Take(5).ToList();
+
+           
 
             return Ok(mappUserFriends);
         }

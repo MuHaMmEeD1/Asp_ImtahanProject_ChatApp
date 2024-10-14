@@ -39,6 +39,16 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
         }
 
 
+        public async Task<List<Message>> GetUserIdMessagesHeaderAsync(string userId)
+        {
+            var messages = await _messageDal.GetListAsync(m =>
+                (m.RecipientUserId == userId && m.Seen == false));
+
+
+            return messages;
+        }
+
+
         public async Task UpdateAsync(Message message)
         {
             await _messageDal.UpdateAsync(message);

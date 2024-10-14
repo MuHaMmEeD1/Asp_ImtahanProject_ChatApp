@@ -22,6 +22,7 @@ SELECT * FROM ReplyToComments
 SELECT * FROM Likes
 SELECT * FROM FriendshipRequests
 SELECT * FROM UserFriends
+SELECT * FROM [Messages]
 
 --  DELETE FROM Posts
 --  DELETE FROM Tags
@@ -29,6 +30,7 @@ SELECT * FROM UserFriends
 --  DELETE FROM Likes
 --  DELETE FROM FriendshipRequests
 --  DELETE FROM UserFriends
+--  DELETE FROM Messages
 
 --  UPDATE AspNetUsers SET FirstName = 'Test_000'  WHERE Id ='f14ae9c0-53ff-4126-bc6a-756c4f7f49ef'
 --  UPDATE AspNetUsers SET IsOnline = 0 

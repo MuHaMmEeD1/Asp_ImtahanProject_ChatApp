@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Asp_ImtahanProject_ChatApp.UI.Models.PostModels;
 using Asp_ImtahanProject_ChatApp.Entities.Concrete;
+using System.Security.Claims;
 
 namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 {
@@ -54,8 +55,62 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }  
+        
+        [HttpGet("/Post/MyPosts/{userId}")]
+        public async Task<IActionResult> MyPosts(string userId)
+        {
+            try
+            {
+                List<Post> posts = await _postService.GetMyPostsAsync(userId);
+
+                var postModels = _mapper.Map<List<PostModel>>(posts);
+
+                return Ok(postModels);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+            
+        [HttpGet("/Post/MySearchPosts")]
+        public async Task<IActionResult> MySearchPosts(string userId, string TagName)
+        {
+            try
+            {
+                List<Post> posts = await _postService.GetMyPostsAsync(userId, TagName);
+
+                var postModels = _mapper.Map<List<PostModel>>(posts);
+
+                return Ok(postModels);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
 
+        [HttpGet("/Post/MyFriendVideoPosts/{userId}")]
+        public async Task<IActionResult> MyFriendVideoPosts(string userId)
+        {
+            try
+            {
+                List<Post> posts = await _postService.GetMyFriendVideoPostAsync(userId);
+
+                
+                var postModels = _mapper.Map<List<PostVideoModel>>(posts);
+
+                return Ok(postModels);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

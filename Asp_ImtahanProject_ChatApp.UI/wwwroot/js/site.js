@@ -27,8 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    if (currentUrl.toLowerCase() == "/home/myprofile" || currentUrl.toLowerCase() == "/home/setting") {
+
+        check = false;
+    }
+
     if (check) {
+       
         menuItems[0].parentElement.classList.add("active");
+
     }
 });
 

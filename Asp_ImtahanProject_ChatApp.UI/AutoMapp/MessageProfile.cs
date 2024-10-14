@@ -16,7 +16,8 @@ namespace Asp_ImtahanProject_ChatApp.UI.AutoMapp
 
 
             CreateMap<Message, MessageHeaderModel>()
-                .ForMember(mm => mm.userProfileUrl, m => m.MapFrom(mp => mp.User.ProfileImageUrl));
+                .ForMember(mm => mm.UserProfileUrl, m => m.MapFrom(mp => mp.User.ProfileImageUrl))
+                .ForMember(mm => mm.UserName, m => m.MapFrom(mp => mp.User.FirstName+ " " + mp.User.LastName));
                 
 
 

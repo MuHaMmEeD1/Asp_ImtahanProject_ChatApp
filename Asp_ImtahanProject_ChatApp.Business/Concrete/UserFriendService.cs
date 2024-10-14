@@ -37,6 +37,11 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
             await _userFriendDal.DeleteAsync(userFriend);
         }
 
+        public async Task<List<UserFriend>> GetMyFriendAsync(string userId)
+        {
+            return await _userFriendDal.GetListAsync(uf=>uf.UserFriendFirstId == userId || uf.UserFriendSecondId == userId);
+        }
+
         public async Task<List<UserFriend>> GetUserFriendsOrUFFListAsync(string myUserId, string outherUserName = "")
         {
             if (string.IsNullOrEmpty(outherUserName))
