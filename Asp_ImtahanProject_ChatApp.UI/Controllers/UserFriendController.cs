@@ -16,12 +16,14 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
         private readonly IUserFriendService _userFriendService; 
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMessageService _messageService;
 
-        public UserFriendController(IUserFriendService userFriendService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public UserFriendController(IUserFriendService userFriendService, IMapper mapper, IHttpContextAccessor httpContextAccessor, IMessageService messageService)
         {
             _userFriendService = userFriendService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _messageService = messageService;
         }
 
 
@@ -74,7 +76,9 @@ namespace Asp_ImtahanProject_ChatApp.UI.Controllers
 
             mappUserFriends = mappUserFriends.OrderByDescending(f => f.IsOnline).ToList();
 
-
+            foreach (var mappUserFriend in mappUserFriends) {
+                mappUserFriend.NotSeenMessageCount = (await _messageService.GetMyMessageAsync(mappUserFriend.OutherUserId)).Count;
+            }
 
             return Ok(mappUserFriends);
         }

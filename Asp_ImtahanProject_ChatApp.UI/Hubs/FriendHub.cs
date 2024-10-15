@@ -83,6 +83,11 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
         {
             await Clients.All.SendAsync("ContactReflash");
 
+        } 
+        public async Task FriendInMessagesReflash(string userId)
+        {
+            await Clients.All.SendAsync("FriendInMessagesReflash", userId);
+
         }
     }
 }

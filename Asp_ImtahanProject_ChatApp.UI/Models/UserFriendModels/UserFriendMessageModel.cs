@@ -7,6 +7,7 @@
         public string UserName { get; set; }
         public string ProfileImageUrl { get; set; }
         public bool IsOnline { get; set; }
+        public int NotSeenMessageCount { get; set; }
 
     }
 }

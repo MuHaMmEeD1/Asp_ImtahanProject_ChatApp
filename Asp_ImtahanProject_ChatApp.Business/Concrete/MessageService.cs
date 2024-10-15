@@ -48,6 +48,14 @@ namespace Asp_ImtahanProject_ChatApp.Business.Concrete
             return messages;
         }
 
+        public async Task<List<Message>> GetMyMessageAsync(string userId)
+        {
+            var messages = await _messageDal.GetListAsync(m =>
+                (m.UserId == userId && m.Seen == false));
+
+
+            return messages;
+        }
 
         public async Task UpdateAsync(Message message)
         {

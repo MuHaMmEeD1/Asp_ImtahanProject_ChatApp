@@ -137,6 +137,17 @@ connection.on("AllPostsRaflash", () => {
     }
 })
 
+connection.on("FriendInMessagesReflash", (userId) => {
+
+    const myUserId = document.getElementById("myUserId");
+    var currentUrl = window.location.pathname;
+ 
+    if (myUserId.innerHTML == userId && currentUrl.toLocaleLowerCase() == "/home/messages") {
+        showUserFriendMessage();
+    }
+
+});
+
 async function InvokePostUlReflash() {
     const searchInput = document.getElementById("searchInput");
     await connection.invoke("PostUlReflash", searchInput.value);
@@ -162,6 +173,9 @@ async function InvokeContactReflashStart() {
 }
 async function InvokeAllPostsRaflashStart() {
     await connection.invoke("AllPostsRaflash");
+}
+async function InvokeFriendInMessagesReflashStart(userId) {
+    await connection.invoke("FriendInMessagesReflash", userId);
 }
 
 // Hub End
@@ -1308,6 +1322,8 @@ function searchFriendEvent(event) {
 function showUserFriendMessage() {
     const friendsMessagesList = document.getElementById("friendsMessagesList");
     const friendSearchMseeageInputValue = document.getElementById("friendSearchMseeageInputValue");
+    const otherUserMessageId = document.getElementById("otherUserMessageId");
+
     let url = '/UserFriend/FriendsMessages';
 
     if (friendSearchMseeageInputValue.innerHTML !== "") {  url += `?UserName=${encodeURIComponent(friendSearchMseeageInputValue.innerHTML)}`;  }
@@ -1316,21 +1332,32 @@ function showUserFriendMessage() {
         url: url,
         type: 'GET',
         success: function (data) {
+            
             friendsMessagesList.innerHTML = '';
 
             if (data.$values.length > 0) {
                 data.$values.forEach((friendMessage, index) => {
                 friendsMessagesList.innerHTML += `
-                <li onclick="enterFriendMessageChatEvent(event, '${friendMessage.outherUserId}', '${friendMessage.profileImageUrl}', '${friendMessage.userName}')" class="list-group-item d-flex align-items-center">
-                    <div class="menu-profile position-relative">
-                        <img src="${friendMessage.profileImageUrl}"  class="rounded-circle" style="width: 40px; height: 40px;">
-                        <span class="status-online" style="width: 15px; height: 15px; background-color: ${friendMessage.isOnline ? 'green' : 'gray'};"></span>
-                    </div>
-                    <span class="ml-2">${friendMessage.userName}</span>
-                    <span style="color: ${friendMessage.isOnline ? 'green' : 'gray'}" class="badge badge-${friendMessage.isOnline ? 'success' : 'secondary'} badge-pill ml-auto">
-                        ${friendMessage.isOnline ? 'Online' : 'Offline'}
-                    </span>
-                </li>`;
+                        <li onclick="enterFriendMessageChatEvent(event, '${friendMessage.outherUserId}', '${friendMessage.profileImageUrl}', '${friendMessage.userName}')" class="list-group-item d-flex align-items-center">
+                            <div class="menu-profile position-relative">
+                                <img src="${friendMessage.profileImageUrl}" class="rounded-circle" style="width: 40px; height: 40px;">
+                                <span class="status-online" style="width: 15px; height: 15px; background-color: ${friendMessage.isOnline ? 'green' : 'gray'};"></span>
+                            </div>
+                            <span class="ml-2">${friendMessage.userName}</span>
+                            <span style="color: ${friendMessage.isOnline ? 'green' : 'gray'}" class="badge badge-${friendMessage.isOnline ? 'success' : 'secondary'} badge-pill ml-auto">
+                                ${friendMessage.isOnline ? 'Online' : 'Offline'}
+                            </span>
+                            ${(friendMessage.notSeenMessageCount > 0 && otherUserMessageId.innerHTML != friendMessage.outherUserId) ? `
+                                <div class="d-inline-block position-relative ml-auto">
+                                    <div class="bg-success rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 20px; height: 20px; font-weight: bold; color: white;">
+                                        ${friendMessage.notSeenMessageCount}
+                                    </div>
+                                </div>
+                                ` : ''}
+                        </li>
+
+                    `;
                 });
             }
         },
@@ -1350,6 +1377,8 @@ function friendSearchMseeageEvent(event) {
 function enterFriendMessageChatEvent(event, otherUserId, otherProfileUrl, otherUserName) {
 
     event.preventDefault();
+
+    const myUserId = document.getElementById("myUserId");
     const otherUserMessageId = document.getElementById("otherUserMessageId");
     const h1OtherUserMessageId = document.getElementById("h1OtherUserMessageId")
     const pOtherUserMessageProfileImage = document.getElementById("pOtherUserMessageProfileImage");
@@ -1360,20 +1389,8 @@ function enterFriendMessageChatEvent(event, otherUserId, otherProfileUrl, otherU
     pOtherUserMessageProfileImage.src = otherProfileUrl;
     pOtherUserMessageUserName.innerHTML = otherUserName;
 
-    $.ajax({
-        url: '/Message/HeaderMessages',
-        type: 'GET',
-        contentType: "application/json",
-        success: function (data) {
-            const myUserId = document.getElementById("myUserId");
 
-            data.$values.forEach((message) => {  updateMessageHeader(message.id);  });
-            InvokeHeaderReflash(myUserId.innerHTML);
-            messageHeaderDivCount.innerHTML = 0;
-            messageHeaderDivCount.style.display = "none";
-        },
-        error: function (xhr, status, error) {  console.error('AJAX Hatası:', status, error);  }
-    });
+    InvokeFriendInMessagesReflashStart(myUserId.innerHTML);
 
     showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName);
 }
@@ -1384,15 +1401,22 @@ function showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName) {
     const userProfileImage = document.getElementById("userProfileImage");
     const userFullName = document.getElementById("userFullName");
 
+    const otherUserMessageId = document.getElementById("otherUserMessageId");
+
+
     const model = { UserId: myUserId.innerHTML, OtherUserId: otherUserId }
 
-    $.ajax({
+    if (otherUserMessageId.innerHTML == otherUserId) {
+
+        $.ajax({
         url: '/Message/Messages', 
         type: 'POST',
         contentType: "application/json",
         data: JSON.stringify(model),
-        success: function (data) {
+            success: function (data) {
+            console.dir(data.$values);
             userFriendMessageDiv.innerHTML = '';  
+            let seenCount = 0;
 
             data.$values.forEach((message) => {
                 userFriendMessageDiv.innerHTML += `
@@ -1419,10 +1443,17 @@ function showMessageFriendAndUser(otherUserId, otherProfileUrl, otherUserName) {
                     </div>
                     `}
                 `;
+                if (message.userId != myUserId.innerHTML && message.seen == false) {  updateMessageHeader(message.id);  seenCount += 1;  }
             });
+
+            InvokeHeaderReflash(myUserId.innerHTML);
+
+            if ((Number(messageHeaderDivCount.innerHTML) - seenCount) <= 0) {  messageHeaderDivCount.innerHTML = 0;  messageHeaderDivCount.style.display = "none";  }
+            else {  messageHeaderDivCount.innerHTML = Number(messageHeaderDivCount.innerHTML) - seenCount;   messageHeaderDivCount.style.display = "block";  }
         },
         error: function (xhr, status, error) {   console.error('AJAX Error:', status, error);  }
     });
+    }
 }
 function addMessageEvent(event) {
     event.preventDefault(); 
@@ -1458,6 +1489,7 @@ function addMessageEvent(event) {
                 InvokeMessageReflashStart(recipientUserId, myUserId, userProfileImage.src, userName.innerHTML);
                 InvokeHeaderReflash(myUserId);
                 InvokeHeaderReflash(recipientUserId);
+                InvokeFriendInMessagesReflashStart(recipientUserId);
             },
             error: function (xhr, status, error) {  console.error('AJAX Hatası:', status, error);  }
         });
@@ -1509,23 +1541,6 @@ function updateMessageHeader(messageId) {
         data: JSON.stringify(model), 
         success: function () {  InvokeHeaderReflash(myUserId.innerHTML);   },
         error: function (xhr, status, error) {  console.error('AJAX Error:', status, error);   }
-    });
-}
-function messagesOnmouseoutEvent() {
-    const messageHeaderDivCount = document.getElementById("messageHeaderDivCount");
-    const myUserId = document.getElementById("myUserId");
-
-    $.ajax({
-        url: '/Message/HeaderMessages',
-        type: 'GET',
-        contentType: "application/json",
-        success: function (data) {
-            data.$values.forEach((message) => { updateMessageHeader(message.id); });
-
-            messageHeaderDivCount.innerHTML = 0;
-            messageHeaderDivCount.style.display = "none";
-        },
-        error: function (xhr, status, error) { console.error('AJAX Hatası:', status, error); }
     });
 }
 
