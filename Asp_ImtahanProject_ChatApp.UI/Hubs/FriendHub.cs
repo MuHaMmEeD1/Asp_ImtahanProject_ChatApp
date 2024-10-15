@@ -75,6 +75,10 @@ namespace Asp_ImtahanProject_ChatApp.UI.Hubs
 
         } 
         
+        public async Task AllPostsRaflash()
+        {
+            await Clients.All.SendAsync("AllPostsRaflash");
+        }
         public async Task ContactReflash()
         {
             await Clients.All.SendAsync("ContactReflash");

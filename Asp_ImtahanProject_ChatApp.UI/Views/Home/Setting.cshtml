@@ -24,180 +24,356 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="profile-information" role="tabpanel">
           <form class="account-setting-form">
-    <h3>Profile Information</h3>
+                <h3>Profile Information</h3>
 
-    <div class="row">
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="FirstNameSettingValue">First Name</label>
-                <input type="text" class="form-control" placeholder="First name" id="FirstNameSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="LastNameSettingValue">Last Name</label>
-                <input type="text" class="form-control" placeholder="Last name" id="LastNameSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="EmailSettingValue">Email</label>
-                <input type="email" class="form-control" placeholder="Email" id="EmailSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="BackupEmailSettingValue">Backup Email</label>
-                <input type="email" class="form-control" placeholder="Backup email" id="BackupEmailSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="DateOfBirthSettingValue">Date of Birth</label>
-                <input type="text" class="form-control" placeholder="Date of birth" id="DateOfBirthSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="PhoneNoSettingValue">Phone No:</label>
-                <input type="text" class="form-control" placeholder="Phone no" id="PhoneNoSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="OccupationSettingValue">Occupation</label>
-                <select class="form-select" id="OccupationSettingValue">
-                    <option selected>Occupation</option>
-                    <option value="2">Software Developer</option>
-                    <option value="3">Biomedical Engineer</option>
-                    <option value="4">Civil Engineer</option>
-                    <option value="5">General Practitioner</option>
-                    <option value="6">Structural Engineer</option>
-                    <option value="7">Pharmacy Technician</option>
-                    <option value="8">Mechanical Engineer</option>
-                    <option value="9">Petroleum Engineer</option>
-                    <option value="10">Technician</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="GenderSettingValue">Gender</label>
-                <select class="form-select" id="GenderSettingValue">
-                    <option selected>Gender</option>
-                    <option value="2">Male</option>
-                    <option value="3">Female</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="RelationStatusSettingValue">Relation Status</label>
-                <select class="form-select" id="RelationStatusSettingValue">
-                    <option selected>Relation Status</option>
-                    <option value="2">Married</option>
-                    <option value="3">Unmarried</option>
-                    <option value="4">Single</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="BloodGroupSettingValue">Blood Group</label>
-                <select class="form-select" id="BloodGroupSettingValue">
-                    <option selected>Blood Group</option>
-                    <option value="2">A+</option>
-                    <option value="3">A-</option>
-                    <option value="4">B+</option>
-                    <option value="5">B-</option>
-                    <option value="6">O+</option>
-                    <option value="7">O-</option>
-                    <option value="8">AB+</option>
-                    <option value="9">AB-</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="WebsiteSettingValue">Website</label>
-                <input type="text" class="form-control" placeholder="Website" id="WebsiteSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="LanguageSettingValue">Language</label>
-                <select class="form-select" id="LanguageSettingValue">
-                    <option selected>Language</option>
-                    <option value="2">English</option>
-                    <option value="3">Portuguese</option>
-                    <option value="4">Japanese</option>
-                    <option value="5">Russian</option>
-                    <option value="6">Javanese</option>
-                    <option value="7">Gujarati</option>
-                    <option value="8">Yoruba</option>
-                    <option value="9">Polish</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="AddressSettingValue">Address</label>
-                <input type="text" class="form-control" placeholder="Address" id="AddressSettingValue">
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="CitySettingValue">City</label>
-                <select class="form-select" id="CitySettingValue">
-                    <option selected>City</option>
-                    <option value="2">Canada</option>
-                    <option value="3">Germany</option>
-                    <option value="4">Switzerland</option>
-                    <option value="5">Australia</option>
-                    <option value="6">United States</option>
-                    <option value="7">New Zealand</option>
-                    <option value="8">United Kingdom</option>
-                    <option value="9">Netherlands</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="StateSettingValue">State</label>
-                <select class="form-select" id="StateSettingValue">
-                    <option selected>State</option>
-                    <option value="2">Canada</option>
-                    <option value="3">Germany</option>
-                    <option value="4">Switzerland</option>
-                    <option value="5">Australia</option>
-                    <option value="6">United States</option>
-                    <option value="7">New Zealand</option>
-                    <option value="8">United Kingdom</option>
-                    <option value="9">Netherlands</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="CountrySettingValue">Country</label>
-                <select class="form-select" id="CountrySettingValue">
-                    <option selected>Country</option>
-                    <option value="2">Canada</option>
-                    <option value="3">Germany</option>
-                    <option value="4">Switzerland</option>
-                    <option value="5">Australia</option>
-                    <option value="6">United States</option>
-                    <option value="7">New Zealand</option>
-                    <option value="8">United Kingdom</option>
-                    <option value="9">Netherlands</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-12 col-md-12">
-            <button onclick="updateSettingAllEvent(event)" type="button" class="default-btn">Save</button>
-        </div>
-    </div>
-</form>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="FirstNameSettingValue">First Name</label>
+                            <input type="text" class="form-control" placeholder="First name" id="FirstNameSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="LastNameSettingValue">Last Name</label>
+                            <input type="text" class="form-control" placeholder="Last name" id="LastNameSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="EmailSettingValue">Email</label>
+                            <input type="email" class="form-control" placeholder="Email" id="EmailSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="BackupEmailSettingValue">Backup Email</label>
+                            <input type="email" class="form-control" placeholder="Backup email" id="BackupEmailSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="DateOfBirthSettingValue">Date of Birth</label>
+                            <input type="text" class="form-control" placeholder="Date of birth" id="DateOfBirthSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="PhoneNoSettingValue">Phone No:</label>
+                            <input type="text" class="form-control" placeholder="Phone no" id="PhoneNoSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="OccupationSettingValue">Occupation</label>
+                            <select class="form-select" id="OccupationSettingValue">
+                                <option selected disabled>Select an occupation</option>
+                                <option value="Software Developer">Software Developer</option>
+                                <option value="Biomedical Engineer">Biomedical Engineer</option>
+                                <option value="Civil Engineer">Civil Engineer</option>
+                                <option value="General Practitioner">General Practitioner</option>
+                                <option value="Structural Engineer">Structural Engineer</option>
+                                <option value="Pharmacy Technician">Pharmacy Technician</option>
+                                <option value="Mechanical Engineer">Mechanical Engineer</option>
+                                <option value="Petroleum Engineer">Petroleum Engineer</option>
+                                <option value="Technician">Technician</option>
+                                <option value="Data Scientist">Data Scientist</option>
+                                <option value="Graphic Designer">Graphic Designer</option>
+                                <option value="Project Manager">Project Manager</option>
+                                <option value="Web Developer">Web Developer</option>
+                                <option value="Marketing Manager">Marketing Manager</option>
+                                <option value="Financial Analyst">Financial Analyst</option>
+                                <option value="Teacher">Teacher</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Accountant">Accountant</option>
+                                <option value="HR Manager">HR Manager</option>
+                                <option value="Sales Representative">Sales Representative</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="GenderSettingValue">Gender</label>
+                            <select class="form-select" id="GenderSettingValue">
+                                <option selected>Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="RelationStatusSettingValue">Relation Status</label>
+                            <select class="form-select" id="RelationStatusSettingValue">
+                                <option selected>Relation Status</option>
+                                <option value="Married">Married</option>
+                                <option value="Unmarried">Unmarried</option>
+                                <option value="Single">Single</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="BloodGroupSettingValue">Blood Group</label>
+                            <select class="form-select" id="BloodGroupSettingValue">
+                                <option selected disabled>Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="WebsiteSettingValue">Website</label>
+                            <input type="text" class="form-control" placeholder="Website" id="WebsiteSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="LanguageSettingValue">Language</label>
+                            <select class="form-select" id="LanguageSettingValue">
+                                <option selected disabled>Select a language</option>
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="Mandarin Chinese">Mandarin Chinese</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Bengali">Bengali</option>
+                                <option value="Portuguese">Portuguese</option>
+                                <option value="Russian">Russian</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Western Punjabi">Western Punjabi</option>
+                                <option value="Marathi">Marathi</option>
+                                <option value="Telugu">Telugu</option>
+                                <option value="Wu Chinese">Wu Chinese</option>
+                                <option value="Turkish">Turkish</option>
+                                <option value="Korean">Korean</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Vietnamese">Vietnamese</option>
+                                <option value="Tamil">Tamil</option>
+                                <option value="Urdu">Urdu</option>
+                                <option value="Javanese">Javanese</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Gujarati">Gujarati</option>
+                                <option value="Polish">Polish</option>
+                                <option value="Ukrainian">Ukrainian</option>
+                                <option value="Persian">Persian</option>
+                                <option value="Malayalam">Malayalam</option>
+                                <option value="Thai">Thai</option>
+                                <option value="Dutch">Dutch</option>
+                                <option value="Hausa">Hausa</option>
+                                <option value="Burmese">Burmese</option>
+                                <option value="Swahili">Swahili</option>
+                                <option value="Amharic">Amharic</option>
+                                <option value="Romanian">Romanian</option>
+                                <option value="Greek">Greek</option>
+                                <option value="Hungarian">Hungarian</option>
+                                <option value="Czech">Czech</option>
+                                <option value="Finnish">Finnish</option>
+                                <option value="Hebrew">Hebrew</option>
+                                <option value="Norwegian">Norwegian</option>
+                                <option value="Danish">Danish</option>
+                                <option value="Swedish">Swedish</option>
+                                <option value="Serbian">Serbian</option>
+                                <option value="Bulgarian">Bulgarian</option>
+                                <option value="Croatian">Croatian</option>
+                                <option value="Slovak">Slovak</option>
+                                <option value="Slovenian">Slovenian</option>
+                                <option value="Lithuanian">Lithuanian</option>
+                                <option value="Latvian">Latvian</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="AddressSettingValue">Address</label>
+                            <input type="text" class="form-control" placeholder="Address" id="AddressSettingValue">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="CitySettingValue">City</label>
+                            <select class="form-select" id="CitySettingValue">
+                                <option selected disabled>Select a city</option>
+                                <option value="Sydney">Sydney</option>
+                                <option value="Melbourne">Melbourne</option>
+                                <option value="Brisbane">Brisbane</option>
+                                <option value="Perth">Perth</option>
+                                <option value="Adelaide">Adelaide</option>
+                                <option value="Gold Coast">Gold Coast</option>
+                                <option value="Canberra">Canberra</option>
+                                <option value="Newcastle">Newcastle</option>
+                                <option value="Wollongong">Wollongong</option>
+                                <option value="Logan City">Logan City</option>
+                                <option value="Geelong">Geelong</option>
+                                <option value="Hobart">Hobart</option>
+                                <option value="Townsville">Townsville</option>
+                                <option value="Cairns">Cairns</option>
+                                <option value="Toowoomba">Toowoomba</option>
+                                <option value="Darwin">Darwin</option>
+                                <option value="Alice Springs">Alice Springs</option>
+                                <option value="Ballarat">Ballarat</option>
+                                <option value="Bendigo">Bendigo</option>
+                                <option value="Launceston">Launceston</option>
+                                <option value="Mackay">Mackay</option>
+                                <option value="Rockhampton">Rockhampton</option>
+                                <option value="Bunbury">Bunbury</option>
+                                <option value="Bundaberg">Bundaberg</option>
+                                <option value="Hervey Bay">Hervey Bay</option>
+                                <option value="Maitland">Maitland</option>
+                                <option value="Tamworth">Tamworth</option>
+                                <option value="Armidale">Armidale</option>
+                                <option value="Bathurst">Bathurst</option>
+                                <option value="Burnie">Burnie</option>
+                                <option value="Devonport">Devonport</option>
+                                <option value="Gladstone">Gladstone</option>
+                                <option value="Mount Isa">Mount Isa</option>
+                                <option value="Shepparton">Shepparton</option>
+                                <option value="Albury">Albury</option>
+                                <option value="Wagga Wagga">Wagga Wagga</option>
+                                <option value="Lismore">Lismore</option>
+                                <option value="Kalgoorlie">Kalgoorlie</option>
+                                <option value="Geraldton">Geraldton</option>
+                                <option value="Mandurah">Mandurah</option>
+                                <option value="Port Macquarie">Port Macquarie</option>
+                                <option value="Goulburn">Goulburn</option>
+                                <option value="Orange">Orange</option>
+                                <option value="Dubbo">Dubbo</option>
+                                <option value="Broken Hill">Broken Hill</option>
+                                <option value="Coffs Harbour">Coffs Harbour</option>
+                                <option value="Albany">Albany</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="StateSettingValue">State</label>
+                            <select class="form-select" id="StateSettingValue">
+                                <option selected disabled>Select a state</option>
+                                <option value="Alabama">Alabama</option>
+                                <option value="Alaska">Alaska</option>
+                                <option value="Arizona">Arizona</option>
+                                <option value="Arkansas">Arkansas</option>
+                                <option value="California">California</option>
+                                <option value="Colorado">Colorado</option>
+                                <option value="Connecticut">Connecticut</option>
+                                <option value="Delaware">Delaware</option>
+                                <option value="Florida">Florida</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Hawaii">Hawaii</option>
+                                <option value="Idaho">Idaho</option>
+                                <option value="Illinois">Illinois</option>
+                                <option value="Indiana">Indiana</option>
+                                <option value="Iowa">Iowa</option>
+                                <option value="Kansas">Kansas</option>
+                                <option value="Kentucky">Kentucky</option>
+                                <option value="Louisiana">Louisiana</option>
+                                <option value="Maine">Maine</option>
+                                <option value="Maryland">Maryland</option>
+                                <option value="Massachusetts">Massachusetts</option>
+                                <option value="Michigan">Michigan</option>
+                                <option value="Minnesota">Minnesota</option>
+                                <option value="Mississippi">Mississippi</option>
+                                <option value="Missouri">Missouri</option>
+                                <option value="Montana">Montana</option>
+                                <option value="Nebraska">Nebraska</option>
+                                <option value="Nevada">Nevada</option>
+                                <option value="New Hampshire">New Hampshire</option>
+                                <option value="New Jersey">New Jersey</option>
+                                <option value="New Mexico">New Mexico</option>
+                                <option value="New York">New York</option>
+                                <option value="North Carolina">North Carolina</option>
+                                <option value="North Dakota">North Dakota</option>
+                                <option value="Ohio">Ohio</option>
+                                <option value="Oklahoma">Oklahoma</option>
+                                <option value="Oregon">Oregon</option>
+                                <option value="Pennsylvania">Pennsylvania</option>
+                                <option value="Rhode Island">Rhode Island</option>
+                                <option value="South Carolina">South Carolina</option>
+                                <option value="South Dakota">South Dakota</option>
+                                <option value="Tennessee">Tennessee</option>
+                                <option value="Texas">Texas</option>
+                                <option value="Utah">Utah</option>
+                                <option value="Vermont">Vermont</option>
+                                <option value="Virginia">Virginia</option>
+                                <option value="Washington">Washington</option>
+                                <option value="West Virginia">West Virginia</option>
+                                <option value="Wisconsin">Wisconsin</option>
+                                <option value="Wyoming">Wyoming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="CountrySettingValue">Country</label>
+                            <select class="form-select" id="CountrySettingValue">
+                                <option selected disabled>Select a country</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Germany">Germany</option>
+                                <option value="Switzerland">Switzerland</option>
+                                <option value="United States">United States</option>
+                                <option value="New Zealand">New Zealand</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="Netherlands">Netherlands</option>
+                                <option value="France">France</option>
+                                <option value="Italy">Italy</option>
+                                <option value="Spain">Spain</option>
+                                <option value="Portugal">Portugal</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="Brazil">Brazil</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Chile">Chile</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="Peru">Peru</option>
+                                <option value="South Africa">South Africa</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="Morocco">Morocco</option>
+                                <option value="Kenya">Kenya</option>
+                                <option value="Japan">Japan</option>
+                                <option value="South Korea">South Korea</option>
+                                <option value="China">China</option>
+                                <option value="India">India</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Russia">Russia</option>
+                                <option value="Ukraine">Ukraine</option>
+                                <option value="Poland">Poland</option>
+                                <option value="Sweden">Sweden</option>
+                                <option value="Norway">Norway</option>
+                                <option value="Denmark">Denmark</option>
+                                <option value="Finland">Finland</option>
+                                <option value="Iceland">Iceland</option>
+                                <option value="Turkey">Turkey</option>
+                                <option value="Greece">Greece</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Qatar">Qatar</option>
+                                <option value="Israel">Israel</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Iraq">Iraq</option>
+                                <option value="Thailand">Thailand</option>
+                                <option value="Vietnam">Vietnam</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Indonesia">Indonesia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                        <button onclick="updateSettingAllEvent(event)" type="button" class="default-btn">Save</button>
+                    </div>
+                </div>
+            </form>
 
 
                 </div>
@@ -230,15 +406,58 @@
                         <div class="form-group">
                             <label>Country</label>
                             <select class="form-select" id="CountryMainSettingInput">
-                                <option selected="1">Country</option>
-                                <option value="2">Canada</option>
-                                <option value="3">Germany</option>
-                                <option value="4">Switzerland</option>
-                                <option value="5">Australia</option>
-                                <option value="6">United States</option>
-                                <option value="7">New Zealand</option>
-                                <option value="8">United Kingdom</option>
-                                <option value="9">Netherlands</option>
+                                <option selected disabled>Select a country</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Germany">Germany</option>
+                                <option value="Switzerland">Switzerland</option>
+                                <option value="United States">United States</option>
+                                <option value="New Zealand">New Zealand</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="Netherlands">Netherlands</option>
+                                <option value="France">France</option>
+                                <option value="Italy">Italy</option>
+                                <option value="Spain">Spain</option>
+                                <option value="Portugal">Portugal</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="Brazil">Brazil</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Chile">Chile</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="Peru">Peru</option>
+                                <option value="South Africa">South Africa</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="Morocco">Morocco</option>
+                                <option value="Kenya">Kenya</option>
+                                <option value="Japan">Japan</option>
+                                <option value="South Korea">South Korea</option>
+                                <option value="China">China</option>
+                                <option value="India">India</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Russia">Russia</option>
+                                <option value="Ukraine">Ukraine</option>
+                                <option value="Poland">Poland</option>
+                                <option value="Sweden">Sweden</option>
+                                <option value="Norway">Norway</option>
+                                <option value="Denmark">Denmark</option>
+                                <option value="Finland">Finland</option>
+                                <option value="Iceland">Iceland</option>
+                                <option value="Turkey">Turkey</option>
+                                <option value="Greece">Greece</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Qatar">Qatar</option>
+                                <option value="Israel">Israel</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Iraq">Iraq</option>
+                                <option value="Thailand">Thailand</option>
+                                <option value="Vietnam">Vietnam</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Indonesia">Indonesia</option>
                             </select>
                         </div>
                     </div>
