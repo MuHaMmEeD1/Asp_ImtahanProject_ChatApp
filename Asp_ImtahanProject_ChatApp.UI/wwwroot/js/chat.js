@@ -1047,6 +1047,8 @@ function myFriendCheckFunction(index, outherUserId) {
 }
 function addFriendNotificationsEvent(event, index, otherUserId, frId) {
     const myUserId = document.getElementById("myUserId").innerHTML;
+    var currentUrl = window.location.pathname;
+
 
     const data = {  UserFriendFirstId: myUserId,  UserFriendSecondId: otherUserId  };
     $.ajax({
@@ -1065,6 +1067,8 @@ function addFriendNotificationsEvent(event, index, otherUserId, frId) {
             InvokePostUlReflash();
             InvokePostUlReflash_ID_Start(otherUserId);
             InvokeContactReflashStart();
+            if (currentUrl.toLowerCase() == "/home/index") { indexShowProfile(); }
+            else if (currentUrl.toLowerCase() == "/home/myprofile") {  showMainProfileDiv(); showProfilePosts();  }
         },
         error: function (xhr, status, error) { console.error("An error occurred: " + status.toString(), error); }
     });
@@ -1289,7 +1293,8 @@ function deleteFriendInFriends(event, outherUserId) {
     event.preventDefault();
 
     const myUserId = document.getElementById("myUserId");
-    const model = { UserId: myUserId.innerHTML,  OtherUserId: outherUserId  };
+    const model = { UserId: myUserId.innerHTML, OtherUserId: outherUserId };
+    var currentUrl = window.location.pathname;
 
     $.ajax({
         url: '/UserFriend/DeleteUsOuId',
@@ -1301,6 +1306,9 @@ function deleteFriendInFriends(event, outherUserId) {
             InvokeFriendsReflashStart(outherUserId);
             InvokeFriendsReflashStart(myUserId.innerHTML);
             InvokeContactReflashStart();
+            if (currentUrl.toLowerCase() == "/home/index") { indexShowProfile(); }
+            else if (currentUrl.toLowerCase() == "/home/myprofile") { showMainProfileDiv(); showProfilePosts(); }
+            
         },
         error: function (xhr, status, error) { console.error("Error deleting friend:", error);  }
     });
