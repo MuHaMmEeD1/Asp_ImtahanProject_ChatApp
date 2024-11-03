@@ -57,7 +57,7 @@ builder.Services.AddScoped<IUserFriendService, UserFriendService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 // Database Configuration
-string connectionString = builder.Configuration.GetConnectionString("Default")!;
+string connectionString = builder.Configuration.GetConnectionString("Production")!;
 
 builder.Services.AddDbContext<ZustDbContext>(options =>
 {
